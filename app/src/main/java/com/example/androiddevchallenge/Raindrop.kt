@@ -115,21 +115,21 @@ fun Rains2(
         Spacer(modifier = modifier.weight(1f))
 
         Raindrop(
-            modifier
+            Modifier
                 .width(30.dp)
                 .height(240.dp),
             500
         )
         Spacer(modifier = modifier.weight(1f))
         Raindrop(
-            modifier
+            Modifier
                 .width(30.dp)
                 .height(250.dp),
             600
         )
         Spacer(modifier = modifier.weight(1f))
         Raindrop(
-            modifier
+            Modifier
                 .width(30.dp)
                 .height(180.dp),
             400
@@ -207,46 +207,17 @@ fun Rains(
         }
     }
 
-//    Box(
-//        modifier = modifier
-//            .size(300.dp)
-////            .rotate(30f)
-//    ) {
-//
-//
-//        Raindrop(
-//            modifier
-//                .fillMaxWidth()
-//                .offset()
-//                .height(240.dp),
-//            500
-//        )
-//        Raindrop(
-//            modifier
-//                .fillMaxWidth(0.1f)
-//                .height(250.dp),
-//            600
-//        )
-//        Raindrop(
-//            modifier
-//                .fillMaxWidth(0.1f)
-//                .height(180.dp),
-//            400
-//        )
-//
-//    }
 
+}
 
+@Preview
+@Composable
+fun previewRains() {
+    Rains(modifier = Modifier.size(300.dp))
 }
 
 //@Preview
 //@Composable
-//fun previewRains() {
-//    Rains(modifier = Modifier.size(300.dp))
+//fun previewRains2() {
+//    Rains2()
 //}
-
-@Preview
-@Composable
-fun previewRains2() {
-    Rains2()
-}

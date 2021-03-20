@@ -13,10 +13,10 @@ import androidx.compose.ui.unit.dp
 
 @Preview
 @Composable
-fun compose() {
+fun compose2() {
     Box(modifier = Modifier.size(width = 300.dp, height = 300.dp)) {
 
-        Sun(
+        Sun2(
             modifier = Modifier
                 .scale(0.9f)
                 .offset(90.dp, 0.dp)
@@ -25,38 +25,39 @@ fun compose() {
         Rains2(
             Modifier
                 .scale(0.4f)
-                .offset(-100.dp, 240.dp))
-//        Cloud(
-//            modifier = Modifier
-//                .scale(1.1f)
-//                .offset(0.dp, 50.dp)
-//        )
+                .offset(-100.dp, 240.dp)
+        )
+        Cloud(
+            modifier = Modifier
+                .scale(1.1f)
+                .offset(0.dp, 50.dp)
+        )
     }
 }
 
 
+@Preview
+@Composable
+fun compose(modifier: Modifier = Modifier) {
+    Box(modifier = modifier.size(300.dp)) {
 
-//@Preview
-//@Composable
-//fun compose2() {
-//    Box(modifier = Modifier.size(width = 200.dp, height = 200.dp)) {
-//
-//        Sun(
-//            modifier = Modifier
-//                .scale(0.5f)
-//                .offset(30.dp, (-22).dp)
-//        )
-//
-//        Rains(
-//            Modifier
-//                .offset(-10.dp, 30.dp)
-//                .size(100.dp))
-//
-//
-//        Cloud(
-//            modifier = Modifier
-//                .scale(1.1f)
-//                .offset(0.dp, 20.dp)
-//        )
-//    }
-//}
+        Sun(
+            modifier = Modifier
+                .size(180.dp)
+                .offset(90.dp, 0.dp)
+        )
+
+        Rains(
+            Modifier
+                .size(120.dp)
+                .offset(45.dp, 80.dp)
+        )
+
+
+        Cloud(
+            modifier = Modifier
+                .scale(1.1f)
+                .offset(0.dp, 30.dp)
+        )
+    }
+}
