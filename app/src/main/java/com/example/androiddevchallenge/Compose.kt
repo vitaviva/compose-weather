@@ -6,14 +6,13 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
-
-@Preview
 @Composable
-fun compose2() {
+fun ComposedIcon2() {
     Box(modifier = Modifier.size(width = 300.dp, height = 300.dp)) {
 
         Sun2(
@@ -36,28 +35,46 @@ fun compose2() {
 }
 
 
-@Preview
 @Composable
-fun compose(modifier: Modifier = Modifier) {
-    Box(modifier = modifier.size(300.dp)) {
+fun ComposedIcon(modifier: Modifier = Modifier, composeInfo: ComposeInfo) {
+
+    val (sun, cloud, rains) = composeInfo
+    Box(modifier = modifier.size(200.dp)) {
 
         Sun(
-            modifier = Modifier
-                .size(180.dp)
-                .offset(90.dp, 0.dp)
+            Modifier
+                .size(sun.size)
+                .offset(sun.offset.first, sun.offset.second)
+                .alpha(sun.alpha)
         )
 
         Rains(
             Modifier
-                .size(120.dp)
-                .offset(45.dp, 80.dp)
+                .size(rains.size)
+                .offset(rains.offset.first, rains.offset.second)
+                .alpha(rains.alpha)
         )
 
 
         Cloud(
-            modifier = Modifier
-                .scale(1.1f)
-                .offset(0.dp, 30.dp)
+            Modifier
+                .size(cloud.size)
+                .offset(cloud.offset.first, cloud.offset.second)
+                .alpha(cloud.alpha)
         )
+
     }
+}
+
+@Preview
+@Composable
+fun PreviewSunrain() {
+    ComposedIcon(composeInfo = sunrain)
+}
+
+
+@Preview
+@Composable
+fun PreviewSunny() {
+    ComposedIcon(composeInfo = sunny)
 }
