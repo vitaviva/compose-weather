@@ -10,18 +10,18 @@ val curDate: LocalDate = LocalDate.now()
 
 
 val hourlyWeather = listOf(
-    HourlyWeather(3f, Weather.Sunny),
-    HourlyWeather(5f, Weather.Sunny),
-    HourlyWeather(7f, Weather.Sunnyrain),
-    HourlyWeather(5f, Weather.Sunnyrain),
-    HourlyWeather(7f, Weather.Sunnyrain),
-    HourlyWeather(9f, Weather.Sunny),
-    HourlyWeather(3f, Weather.Cloud),
-    HourlyWeather(5f, Weather.Cloud),
-    HourlyWeather(7f, Weather.Sunnyrain),
-    HourlyWeather(5f, Weather.Sunnyrain),
-    HourlyWeather(7f, Weather.Sunny),
-    HourlyWeather(9f, Weather.Sunny),
+    HourlyWeather(15f, Weather.Sunny),
+    HourlyWeather(13f, Weather.Sunny),
+    HourlyWeather(18f, Weather.Sunnyrain),
+    HourlyWeather(20f, Weather.Sunnyrain),
+    HourlyWeather(19f, Weather.Sunnyrain),
+    HourlyWeather(20f, Weather.Sunny),
+    HourlyWeather(15f, Weather.Cloud),
+    HourlyWeather(19f, Weather.Cloud),
+    HourlyWeather(17f, Weather.Sunnyrain),
+    HourlyWeather(15f, Weather.Sunnyrain),
+    HourlyWeather(10f, Weather.Sunny),
+    HourlyWeather(15f, Weather.Sunny),
 )
 
 @RequiresApi(Build.VERSION_CODES.O)
