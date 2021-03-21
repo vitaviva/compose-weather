@@ -13,15 +13,15 @@ val hourlyWeather = listOf(
     HourlyWeather(3f, Weather.Sunny),
     HourlyWeather(5f, Weather.Sunny),
     HourlyWeather(7f, Weather.Sunnyrain),
-    HourlyWeather(3f, Weather.Sunnyrain),
+    HourlyWeather(5f, Weather.Sunnyrain),
     HourlyWeather(7f, Weather.Sunnyrain),
-    HourlyWeather(3f, Weather.Sunny),
-    HourlyWeather(8f, Weather.Cloud),
+    HourlyWeather(9f, Weather.Sunny),
     HourlyWeather(3f, Weather.Cloud),
-    HourlyWeather(12f, Weather.Sunnyrain),
-    HourlyWeather(3f, Weather.Sunnyrain),
-    HourlyWeather(4f, Weather.Sunny),
-    HourlyWeather(5f, Weather.Sunny),
+    HourlyWeather(5f, Weather.Cloud),
+    HourlyWeather(7f, Weather.Sunnyrain),
+    HourlyWeather(5f, Weather.Sunnyrain),
+    HourlyWeather(7f, Weather.Sunny),
+    HourlyWeather(9f, Weather.Sunny),
 )
 
 @RequiresApi(Build.VERSION_CODES.O)
