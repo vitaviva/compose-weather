@@ -1,5 +1,9 @@
 package com.example.androiddevchallenge
 
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.size
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
@@ -55,7 +59,7 @@ data class IconInfo(
             scale = scale - iconInfo.scale
         )
 
-    operator fun plus(iconInfo: IconInfo):IconInfo =
+    operator fun plus(iconInfo: IconInfo): IconInfo =
         copy(
             size = size + iconInfo.size,
             offset = offset.first + iconInfo.offset.first to offset.second + iconInfo.offset.second,
@@ -63,16 +67,3 @@ data class IconInfo(
             scale = scale + iconInfo.scale
         )
 }
-
-val sunrain = ComposeInfo(
-    sun = IconInfo(120.dp, 80.dp to 0.dp),
-    cloud = IconInfo(200.dp, 0.dp to 0.dp),
-    rains = IconInfo(80.dp, 45.dp to 60.dp),
-)
-
-
-val sunny = ComposeInfo(
-    sun = IconInfo(200.dp, 0.dp to 0.dp),
-    cloud = IconInfo(200.dp, -200.dp to 0.dp, 0f),
-    rains = IconInfo(80.dp, 45.dp to 60.dp, 0f),
-)

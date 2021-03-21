@@ -9,8 +9,10 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -55,8 +57,7 @@ fun PreviewSun2() {
 
 
 @Composable
-fun Sun(modifier: Modifier = Modifier) {
-
+fun AnimatableSun(modifier: Modifier = Modifier) {
     val transition = rememberInfiniteTransition()
 
     val animateTween by transition.animateFloat(
@@ -65,8 +66,14 @@ fun Sun(modifier: Modifier = Modifier) {
         animationSpec = infiniteRepeatable(tween(5000), RepeatMode.Restart)
     )
 
+    Sun(modifier = modifier.rotate(animateTween))
+}
 
-    Canvas(modifier.rotate(animateTween)) {
+
+@Composable
+fun Sun(modifier: Modifier = Modifier) {
+
+    Canvas(modifier) {
 
         val radius = size.width / 6
         val stroke = size.width / 20
@@ -100,7 +107,7 @@ fun Sun(modifier: Modifier = Modifier) {
             val x1 = size.width / 2 + offsetX + centerOffset.x
             val x2 = x1 + lineLength * cos(radians).toFloat()
 
-            val y1 = size.width / 2 + offsetY + centerOffset.y
+            val y1 = size.height / 2 + offsetY + centerOffset.y
             val y2 = y1 + lineLength * sin(radians).toFloat()
 
             drawLine(
@@ -121,7 +128,5 @@ fun Sun(modifier: Modifier = Modifier) {
 @Preview
 @Composable
 fun PreviewSun() {
-    Sun(Modifier.size(100.dp))
+    AnimatableSun(Modifier.size(100.dp))
 }
-
-

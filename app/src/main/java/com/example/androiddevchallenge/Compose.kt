@@ -1,6 +1,5 @@
 package com.example.androiddevchallenge
 
-import Cloud
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
@@ -10,7 +9,9 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.androiddevchallenge.data.Weather
 
+@Deprecated("")
 @Composable
 fun ComposedIcon2() {
     Box(modifier = Modifier.size(width = 300.dp, height = 300.dp)) {
@@ -41,7 +42,7 @@ fun ComposedIcon(modifier: Modifier = Modifier, composeInfo: ComposeInfo) {
     val (sun, cloud, rains) = composeInfo
     Box(modifier = modifier.size(200.dp)) {
 
-        Sun(
+        AnimatableSun(
             Modifier
                 .size(sun.size)
                 .offset(sun.offset.first, sun.offset.second)
@@ -56,7 +57,7 @@ fun ComposedIcon(modifier: Modifier = Modifier, composeInfo: ComposeInfo) {
         )
 
 
-        Cloud(
+        AnimatableCloud(
             Modifier
                 .size(cloud.size)
                 .offset(cloud.offset.first, cloud.offset.second)
@@ -66,15 +67,24 @@ fun ComposedIcon(modifier: Modifier = Modifier, composeInfo: ComposeInfo) {
     }
 }
 
+
 @Preview
 @Composable
 fun PreviewSunrain() {
-    ComposedIcon(composeInfo = sunrain)
+    ComposedIcon(composeInfo = Weather.Sunnyrain.animatableIcon)
 }
 
 
 @Preview
 @Composable
 fun PreviewSunny() {
-    ComposedIcon(composeInfo = sunny)
+    ComposedIcon(composeInfo = Weather.Sunny.animatableIcon)
+}
+
+
+
+@Preview
+@Composable
+fun PreviewCloud() {
+    ComposedIcon(composeInfo = Weather.Cloud.animatableIcon)
 }
