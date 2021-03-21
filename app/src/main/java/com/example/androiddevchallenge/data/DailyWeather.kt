@@ -19,7 +19,7 @@ data class HourlyWeather(
 
 @SuppressLint("NewApi")
 fun DailyWeather.dayOfWeek() = run {
-    date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.US)
+    date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.US)
 }
 
 @SuppressLint("NewApi")

@@ -4,6 +4,7 @@ import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.Shader
+import android.graphics.Typeface
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
@@ -14,12 +15,15 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.material.Card
+import androidx.compose.material.Divider
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -29,6 +33,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -48,7 +53,9 @@ import com.example.androiddevchallenge.data.Weather
 import com.example.androiddevchallenge.data.curHourlyWeather
 import com.example.androiddevchallenge.data.dailyWeather
 import com.example.androiddevchallenge.data.dayOfWeek
+import java.util.*
 import kotlin.math.abs
+import kotlin.math.roundToInt
 
 
 @Preview
@@ -99,53 +106,103 @@ fun WeatherView() {
         }
         LazyRow(
             Modifier
-                .height(200.dp)
+                .height(100.dp)
                 .wrapContentWidth()
         ) {
             item {
-                LineChart(
+                Box(
                     Modifier
                         .fillMaxHeight()
                         .width(900.dp)
-                )
+                ) {
+
+                    Row(Modifier.fillMaxSize()) {
+                        weather.hourly.forEachIndexed { index, it ->
+                            Column(
+                                modifier = Modifier
+                                    .weight(1f)
+                                    .alpha(0.6f)
+                                    .align(Alignment.Bottom)
+                            ) {
+                                Box(
+                                    modifier = Modifier
+                                        .padding(start = 6.dp, end = 6.dp)
+                                        .align(Alignment.CenterHorizontally)
+                                ) {
+                                    it.weather.icon()
+                                }
+                                Text(
+                                    if (index < 12) "${(index + 1)} AM"
+                                    else "${(index - 11)} PM",
+                                    fontSize = 9.sp,
+                                    fontWeight = FontWeight.Light,
+                                    modifier = Modifier.align(Alignment.CenterHorizontally)
+                                )
+                            }
+                        }
+
+                    }
+
+                    LineChart(Modifier.fillMaxSize())
+
+                }
+
             }
 
         }
+
+        Divider(
+            Modifier
+                .padding(top = 10.dp)
+                .height(0.5.dp)
+        )
 
         Row(
             modifier = Modifier
                 .height(100.dp)
                 .fillMaxWidth()
         ) {
-            (0..6).forEach {
-                Column(
+            (0..6).forEachIndexed { index, it ->
+                Box(
                     Modifier
                         .weight(1f)
+                        .fillMaxHeight()
                         .clickable {
                             weather = dailyWeather[it]
-                        }
-                ) {
-                    Text(
-                        text = when (it) {
-                            0 -> "Today"
-                            1 -> "Tomorrow"
-                            else -> dailyWeather[it].dayOfWeek()
-                        },
-                        style = TextStyle(fontSize = 10.sp),
-                        fontWeight = FontWeight.Light,
-                        textAlign = TextAlign.Center,
-                        modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
-
-                    Box(
-                        modifier = Modifier
-                            .padding(5.dp)
-                            .align(Alignment.CenterHorizontally)
+                        }) {
+                    Column(
+                        Modifier.align(Alignment.Center)
                     ) {
-                        dailyWeather[it].weather.icon()
-                    }
+                        Text(
+                            text = when (it) {
+                                0 -> "Today"
+                                1 -> "Tomorrow"
+                                else -> dailyWeather[it].dayOfWeek()
+                            },
+                            style = TextStyle(fontSize = 10.sp),
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.align(Alignment.CenterHorizontally)
+                        )
 
+                        Box(
+                            modifier = Modifier
+                                .padding(5.dp)
+                                .align(Alignment.CenterHorizontally)
+                        ) {
+                            dailyWeather[it].weather.icon()
+                        }
+
+                    }
                 }
+
+
+                if (index < 6)
+                    Divider(
+                        Modifier
+                            .height(70.dp)
+                            .width(0.5.dp)
+                            .align(Alignment.CenterVertically)
+                    )
 
             }
 
@@ -160,53 +217,29 @@ fun LineChart(modifier: Modifier) {
 
     Canvas(modifier) {
 
-        val increament = size.width / 12
-        val step = size.height / (dailyWeather[0].hourly.maxOf { it.temperature } * 1.2f)
+        val increament = size.width / dailyWeather[0].hourly.size
+        val step = size.height / (dailyWeather[0].hourly.maxOf { it.temperature } * 4f)
 
-        drawIntoCanvas {
+        drawIntoCanvas { canvas ->
 
             val path = Path()
 
             val points = dailyWeather[0].hourly.mapIndexed { index, hourlyWeather ->
                 Offset(
                     increament * index + increament / 2,
-                    size.height - hourlyWeather.temperature * step
+                    size.height * 0.5f - hourlyWeather.temperature * step
                 )
             }
-
-            it.drawPoints(PointMode.Points, points, androidx.compose.ui.graphics.Paint().apply {
-                strokeWidth = 20f
-                strokeCap = StrokeCap.Round
-                color = Color.Black
-            })
 
 
             path.moveTo(0f, points.first().y)
             path.lineTo(points.first().x, points.first().y)
 
 
-//            val xMoveDisptance = increament / 4
-//            val yMoveDistancce = step / 4
-
-            points.take(11).forEachIndexed { index, it ->
+            points.take(points.size - 1).forEachIndexed { index, it ->
 
                 val startP = it
                 val endP = points[index + 1]
-
-//                val controlX0 = (startP.x + cx) / 2
-//                val controlY0 = (startP.y + cy) / 2
-//                val controlX1 = (endP.x + cx) / 2
-//                val controlY1 = (endP.y + cy) / 2
-//
-//                if (endP.y < startP.y) {
-//                    val p2 = Offset(controlX0 + xMoveDisptance, controlY0 - yMoveDistancce)
-//                    val p3 = Offset(controlX1 - xMoveDisptance, controlY1 + yMoveDistancce)
-//                    path.cubicTo(p2.x, p2.y, p3.x, p3.y, endP.x, endP.y)
-//                } else {
-//                    val p2 = Offset(controlX0 + xMoveDisptance, controlY0 + xMoveDisptance)
-//                    val p3 = Offset(controlX1 - yMoveDistancce, controlY0 - yMoveDistancce)
-//                    path.cubicTo(p2.x, p2.y, p3.x, p3.y, endP.x, endP.y)
-//                }
 
                 val p2: Offset
                 val p3: Offset
@@ -228,12 +261,12 @@ fun LineChart(modifier: Modifier) {
             path.lineTo(0f, size.height)
             path.lineTo(0f, points.first().y)
 
-
-            it.nativeCanvas.drawPath(path, Paint().apply {
+            //drawPath
+            canvas.nativeCanvas.drawPath(path, Paint().apply {
                 val linearGradient = LinearGradient(
                     0f, 0f,
                     0f,
-                    500f,
+                    200f,
 //                    android.graphics.Color.argb(255, 229, 160, 144),
                     Color.Black.copy(alpha = 0.1f).toArgb(),
                     Color.Transparent.toArgb(),
@@ -244,6 +277,33 @@ fun LineChart(modifier: Modifier) {
                 style = Paint.Style.FILL
                 isAntiAlias = true
             })
+
+            //draw Points
+            canvas.drawPoints(PointMode.Points, points, androidx.compose.ui.graphics.Paint().apply {
+                strokeWidth = 8f
+                strokeCap = StrokeCap.Round
+                color = Color.Black.copy(0.6f)
+            })
+
+            //drawText
+            val size = 10.sp.toPx()
+            val textPaint = Paint().apply {
+                color = Color.Black.toArgb()
+                textSize = size
+                alpha = 90
+                typeface = Typeface.MONOSPACE
+
+            }
+            dailyWeather[0].hourly.asSequence().zip(points.asSequence())
+                .forEachIndexed { index, pair ->
+                    val (weather, points) = pair
+                    canvas.nativeCanvas.drawText(
+                        "${weather.temperature.roundToInt()}",
+                        points.x - size / 2,
+                        points.y - size / 1.5f,
+                        textPaint
+                    )
+                }
 
 
         }

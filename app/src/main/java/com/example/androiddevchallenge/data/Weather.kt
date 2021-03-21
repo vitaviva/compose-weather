@@ -1,7 +1,5 @@
 package com.example.androiddevchallenge.data
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -28,7 +26,7 @@ enum class Weather(
             sun = IconInfo(120.dp, 80.dp to 0.dp),
             cloud = IconInfo(200.dp, 0.dp to 0.dp),
             rains = IconInfo(80.dp, 45.dp to 60.dp),
-        ), {}
+        ), { Cloud(Modifier.size(40.dp)) }
     ),
     Cloud(
         ComposeInfo(
