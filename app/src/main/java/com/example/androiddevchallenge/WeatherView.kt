@@ -13,7 +13,6 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.DraggableState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -41,8 +40,11 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PaintingStyle
+import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.PointMode
 import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
@@ -112,18 +114,13 @@ fun WeatherView() {
 
         Spacer(modifier = Modifier.height(30.dp))
 
-        Box(
-            Modifier.align(Alignment.CenterHorizontally)
-        ) {
-            WeatherIcon(
-                Modifier.align(Alignment.Center),
-                curWeather
-            )
-        }
+        WeatherIcon(
+            Modifier.align(Alignment.CenterHorizontally),
+            curWeather
+        )
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        DraggableState { }
         Pager(
             state = pagerState,
             modifier = Modifier
@@ -171,7 +168,7 @@ fun WeatherView() {
                                     fontSize = 19.sp,
                                     fontFamily = FontFamily.Monospace,
                                     fontWeight = FontWeight.SemiBold,
-                                )
+                                ),modifier = Modifier.align(Alignment.End)
                             )
                             Spacer(modifier = Modifier.height(3.dp))
                             Text(
@@ -180,7 +177,7 @@ fun WeatherView() {
                                     fontSize = 19.sp,
                                     fontFamily = FontFamily.Monospace,
                                     fontWeight = FontWeight.SemiBold,
-                                )
+                                ),modifier = Modifier.align(Alignment.End)
                             )
                         }
 
@@ -221,27 +218,119 @@ fun WeatherView() {
                 .height(0.5.dp)
         )
 
+        DailyWeatherChart(dailyWeathers = dailyWeather) {
+            selectedIndex = it
+        }
+    }
+}
+
+
+/**
+ * Daily weather chart
+ */
+@Composable
+fun DailyWeatherChart(
+    modifier: Modifier = Modifier,
+    dailyWeathers: List<DailyWeather>,
+    onSelect: (index: Int) -> Unit
+) {
+
+    Box(modifier = modifier.fillMaxWidth()) {
+
+        Canvas(
+            modifier = Modifier
+                .height(45.dp)
+                .fillMaxWidth()
+                .padding(bottom = 30.dp)
+                .align(Alignment.BottomCenter)
+        ) {
+
+            val increment = size.width / dailyWeathers.size
+            val min = dailyWeather.minOf { it.averageTemperature }
+            val max = dailyWeather.maxOf { it.averageTemperature }
+            val dy = (max - min).toFloat()
+
+            val points = dailyWeather.mapIndexed { index, dailyWeather ->
+                Offset(
+                    increment * index + increment / 2,
+                    (1 - (dailyWeather.averageTemperature - min) / dy) * size.height
+                )
+            }
+
+            val path = androidx.compose.ui.graphics.Path()
+            path.moveTo(points.first().x, points.first().y)
+
+            (0..points.size - 2).forEach { index ->
+                path.lineTo(points[index + 1].x, points[index + 1].y)
+            }
+
+            drawIntoCanvas { canvas ->
+
+                //draw path
+                canvas.drawPath(path, androidx.compose.ui.graphics.Paint().apply {
+                    style = PaintingStyle.Stroke
+                    strokeWidth = 0.5.dp.toPx()
+                    pathEffect = PathEffect.cornerPathEffect(40f)
+                })
+
+
+                //draw text
+                val size = 10.sp.toPx()
+
+                val textPaint = Paint().apply {
+                    color = Color.Black.toArgb()
+                    textSize = size
+                    typeface = Typeface.MONOSPACE
+
+                }
+                dailyWeather.asSequence().zip(points.asSequence())
+                    .forEachIndexed { index, pair ->
+                        val (weather, points) = pair
+                        //draw round background
+                        val radius = size * 0.9f
+                        drawCircle(Color.White, radius, Offset(points.x + size / 4, points.y))
+                        drawCircle(
+                            Color.Black,
+                            radius,
+                            Offset(points.x + size / 6, points.y + size / 10),
+                            style = Stroke(width = 1.dp.toPx())
+                        )
+
+                        canvas.nativeCanvas.drawText(
+                            "${weather.averageTemperature}",
+                            points.x - size / 2,
+                            points.y + size / 2,
+                            textPaint
+                        )
+                    }
+            }
+        }
+
+
         Row(
             modifier = Modifier
-                .height(100.dp)
+                .height(130.dp)
                 .fillMaxWidth()
         ) {
-            (dailyWeather.indices).forEachIndexed { index, it ->
+            (dailyWeathers.indices).forEach {
+
                 Box(
                     Modifier
                         .weight(1f)
                         .fillMaxHeight()
                         .clickable {
-                            selectedIndex = it
+                            onSelect(it)
                         }) {
                     Column(
-                        Modifier.align(Alignment.Center)
+                        Modifier.align(Alignment.TopCenter)
                     ) {
+                        Spacer(modifier = Modifier.height(15.dp))
+
                         Text(
                             text = when (it) {
                                 0 -> "Today"
                                 1 -> "Tomorrow"
-                                else -> dailyWeather[it].dayOfWeek
+                                else -> dailyWeathers[it].dayOfWeek
                             },
                             style = TextStyle(fontSize = 10.sp),
                             textAlign = TextAlign.Center,
@@ -251,19 +340,18 @@ fun WeatherView() {
                         Box(
                             modifier = Modifier
                                 .padding(5.dp)
-                                .align(Alignment.CenterHorizontally)
                         ) {
-                            dailyWeather[it].weather.icon()
+                            dailyWeathers[it].weather.icon()
                         }
 
                     }
                 }
 
 
-                if (index < 6)
+                if (it < 6)
                     Divider(
                         Modifier
-                            .height(70.dp)
+                            .height(80.dp)
                             .width(0.5.dp)
                             .align(Alignment.CenterVertically)
                     )
@@ -272,7 +360,9 @@ fun WeatherView() {
 
         }
 
+
     }
+
 }
 
 
@@ -334,7 +424,6 @@ fun HourlyWeatherChart(
 }
 
 
-
 /**
  * Render hourly temperature with curve-line chart
  * show with animation
@@ -361,12 +450,15 @@ fun LineChart(modifier: Modifier, dailyWeather: DailyWeather) {
 
     Canvas(modifier) {
 
-        val increament = size.width / dailyWeather.hourly.size
-        val step = size.height / (dailyWeather.hourly.maxOf { it.temperature } * 4f)
+        val increment = size.width / dailyWeather.hourly.size
+        val max = dailyWeather.hourly.maxOf { it.temperature }
+        val min = dailyWeather.hourly.minOf { it.temperature }
+        val dy = (max - min).toFloat()
 
         drawIntoCanvas { canvas ->
 
-            if (cur != dailyWeather) { // change visible range according to animation
+            if (cur != dailyWeather) {
+                // change visible range according to animation
                 canvas.clipRect(Rect(0f, 0f, size.width * animateFloat, size.height))
             }
 
@@ -374,19 +466,18 @@ fun LineChart(modifier: Modifier, dailyWeather: DailyWeather) {
 
             val points = dailyWeather.hourly.mapIndexed { index, hourlyWeather ->
                 Offset(
-                    increament * index + increament / 2,
-                    size.height * 0.5f - hourlyWeather.temperature * step
+                    increment * index + increment / 2,
+                    (1 - (hourlyWeather.temperature - min) / dy) * (size.height * 0.3f)
+                            + size.height * 0.2f //reserve space for drawText
                 )
             }
-
 
             path.moveTo(0f, points.first().y)
             path.lineTo(points.first().x, points.first().y)
 
+            (0..points.size - 2).forEach { index ->
 
-            points.take(points.size - 1).forEachIndexed { index, it ->
-
-                val startP = it
+                val startP = points[index]
                 val endP = points[index + 1]
 
                 val p2: Offset
@@ -404,18 +495,16 @@ fun LineChart(modifier: Modifier, dailyWeather: DailyWeather) {
 
             }
 
-            path.lineTo(points.last().x + increament / 2, points.last().y)
-            path.lineTo(points.last().x + increament / 2, size.height)
+            path.lineTo(points.last().x + increment / 2, points.last().y)
+            path.lineTo(points.last().x + increment / 2, size.height)
             path.lineTo(0f, size.height)
             path.lineTo(0f, points.first().y)
 
-            //drawPath
+            //draw path
             canvas.nativeCanvas.drawPath(path, Paint().apply {
                 val linearGradient = LinearGradient(
                     0f, 0f,
-                    0f,
-                    200f,
-//                    android.graphics.Color.argb(255, 229, 160, 144),
+                    0f, 200f,
                     Color.Black.copy(alpha = 0.1f).toArgb(),
                     Color.Transparent.toArgb(),
                     Shader.TileMode.CLAMP
@@ -426,14 +515,14 @@ fun LineChart(modifier: Modifier, dailyWeather: DailyWeather) {
                 isAntiAlias = true
             })
 
-            //draw Points
+            //draw points
             canvas.drawPoints(PointMode.Points, points, androidx.compose.ui.graphics.Paint().apply {
                 strokeWidth = 8f
                 strokeCap = StrokeCap.Round
                 color = Color.Black.copy(0.6f)
             })
 
-            //drawText
+            //draw text
             val size = 10.sp.toPx()
             val textPaint = Paint().apply {
                 color = Color.Black.toArgb()
