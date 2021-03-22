@@ -38,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PointMode
@@ -52,6 +53,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.androiddevchallenge.data.DailyWeather
 import com.example.androiddevchallenge.data.Weather
 import com.example.androiddevchallenge.data.averageTemperature
 import com.example.androiddevchallenge.data.curHourlyWeather
@@ -70,19 +72,18 @@ fun WeatherView() {
 
     val pagerState = remember { PagerState() }
     var selectedIndex by remember { mutableStateOf(0) }
-    val selected = pagerState.selectionState
     val (selectedDay, curWeather) = remember(selectedIndex) {
         val day = dailyWeather[selectedIndex]
         day to if (selectedIndex == 0) day.curHourlyWeather.weather
         else day.weather
     }
-
-    DisposableEffect(selected) {
-        selectedIndex = pagerState.currentPage
-        onDispose { }
-    }
     DisposableEffect(Unit) {
         pagerState.maxPage = (dailyWeather.size - 1).coerceAtLeast(0)
+        onDispose { }
+    }
+    DisposableEffect(pagerState.selectionState) {
+        //whenever pager changed，get latest index
+        selectedIndex = pagerState.currentPage
         onDispose { }
     }
     DisposableEffect(selectedIndex) {
@@ -212,52 +213,7 @@ fun WeatherView() {
 
         }
 
-        LazyRow(
-            Modifier
-                .height(100.dp)
-                .wrapContentWidth()
-        ) {
-            item {
-                Box(
-                    Modifier
-                        .fillMaxHeight()
-                        .width(900.dp)
-                ) {
-
-                    Row(Modifier.fillMaxSize()) {
-                        selectedDay.hourly.forEachIndexed { index, it ->
-                            Column(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .alpha(0.6f)
-                                    .align(Alignment.Bottom)
-                            ) {
-                                Box(
-                                    modifier = Modifier
-                                        .padding(start = 6.dp, end = 6.dp)
-                                        .align(Alignment.CenterHorizontally)
-                                ) {
-                                    it.weather.icon()
-                                }
-                                Text(
-                                    if (index < 12) "${(index + 1)} AM"
-                                    else "${(index - 11)} PM",
-                                    fontSize = 9.sp,
-                                    fontWeight = FontWeight.Light,
-                                    modifier = Modifier.align(Alignment.CenterHorizontally)
-                                )
-                            }
-                        }
-
-                    }
-
-                    LineChart(Modifier.fillMaxSize())
-
-                }
-
-            }
-
-        }
+        HourlyWeatherChart(dailyWeather = selectedDay)
 
         Divider(
             Modifier
@@ -285,7 +241,7 @@ fun WeatherView() {
                             text = when (it) {
                                 0 -> "Today"
                                 1 -> "Tomorrow"
-                                else -> com.example.androiddevchallenge.data.dailyWeather[it].dayOfWeek
+                                else -> dailyWeather[it].dayOfWeek
                             },
                             style = TextStyle(fontSize = 10.sp),
                             textAlign = TextAlign.Center,
@@ -297,7 +253,7 @@ fun WeatherView() {
                                 .padding(5.dp)
                                 .align(Alignment.CenterHorizontally)
                         ) {
-                            com.example.androiddevchallenge.data.dailyWeather[it].weather.icon()
+                            dailyWeather[it].weather.icon()
                         }
 
                     }
@@ -320,19 +276,103 @@ fun WeatherView() {
 }
 
 
+/**
+ * Hourly weather chart
+ * @param [dailyWeather] rendered daily weather
+ */
 @Composable
-fun LineChart(modifier: Modifier) {
+fun HourlyWeatherChart(
+    modifier: Modifier = Modifier,
+    dailyWeather: DailyWeather
+) {
+    LazyRow(
+        modifier
+            .height(100.dp)
+            .wrapContentWidth()
+    ) {
+        item {
+            Box(
+                Modifier
+                    .fillMaxHeight()
+                    .width(900.dp)
+            ) {
+
+                Row(Modifier.fillMaxSize()) {
+                    dailyWeather.hourly.forEachIndexed { index, it ->
+                        Column(
+                            modifier = Modifier
+                                .weight(1f)
+                                .alpha(0.6f)
+                                .align(Alignment.Bottom)
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .padding(start = 6.dp, end = 6.dp)
+                                    .align(Alignment.CenterHorizontally)
+                            ) {
+                                it.weather.icon()
+                            }
+                            Text(
+                                if (index < 12) "${(index + 1)} AM"
+                                else "${(index - 11)} PM",
+                                fontSize = 9.sp,
+                                fontWeight = FontWeight.Light,
+                                modifier = Modifier.align(Alignment.CenterHorizontally)
+                            )
+                        }
+                    }
+
+                }
+
+                LineChart(Modifier.fillMaxSize(), dailyWeather)
+
+            }
+
+        }
+
+    }
+}
+
+
+
+/**
+ * Render hourly temperature with curve-line chart
+ * show with animation
+ */
+@Composable
+fun LineChart(modifier: Modifier, dailyWeather: DailyWeather) {
+
+    val (cur, setCur) = remember { mutableStateOf<DailyWeather?>(null) }
+
+    var trigger by remember { mutableStateOf(0f) }
+
+    DisposableEffect(dailyWeather) {
+        trigger = 1f
+        onDispose { }
+    }
+
+    val animateFloat by animateFloatAsState(
+        targetValue = trigger,
+        animationSpec = tween(1500)
+    ) {
+        setCur(dailyWeather)
+        trigger = 0f
+    }
 
     Canvas(modifier) {
 
-        val increament = size.width / dailyWeather[0].hourly.size
-        val step = size.height / (dailyWeather[0].hourly.maxOf { it.temperature } * 4f)
+        val increament = size.width / dailyWeather.hourly.size
+        val step = size.height / (dailyWeather.hourly.maxOf { it.temperature } * 4f)
 
         drawIntoCanvas { canvas ->
 
+            if (cur != dailyWeather) { // change visible range according to animation
+                canvas.clipRect(Rect(0f, 0f, size.width * animateFloat, size.height))
+            }
+
             val path = Path()
 
-            val points = dailyWeather[0].hourly.mapIndexed { index, hourlyWeather ->
+            val points = dailyWeather.hourly.mapIndexed { index, hourlyWeather ->
                 Offset(
                     increament * index + increament / 2,
                     size.height * 0.5f - hourlyWeather.temperature * step
@@ -402,7 +442,7 @@ fun LineChart(modifier: Modifier) {
                 typeface = Typeface.MONOSPACE
 
             }
-            dailyWeather[0].hourly.asSequence().zip(points.asSequence())
+            dailyWeather.hourly.asSequence().zip(points.asSequence())
                 .forEachIndexed { index, pair ->
                     val (weather, points) = pair
                     canvas.nativeCanvas.drawText(
@@ -433,11 +473,12 @@ fun WeatherIcon(modifier: Modifier, weatherIcon: Weather) {
 
     val animateFloat by animateFloatAsState(
         targetValue = trigger,
-        finishedListener = {
-            setCur(weatherIcon)
-            trigger = 0f
-        }, animationSpec = tween(1000)
-    )
+        animationSpec = tween(1000)
+    ) {
+        setCur(weatherIcon)
+        trigger = 0f
+    }
+
 
     val composeInfo = remember(animateFloat) {
         cur.animatable + (weatherIcon.animatable - cur.animatable) * animateFloat
