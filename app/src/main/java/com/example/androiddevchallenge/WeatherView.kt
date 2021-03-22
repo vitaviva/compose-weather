@@ -157,22 +157,53 @@ fun WeatherView() {
 
                     Spacer(modifier = Modifier.height(10.dp))
 
-                    Text(
-                        "${day.averageTemperature}℃",
-                        style = TextStyle(
-                            fontSize = 70.sp,
-                            fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.SemiBold
-                        ), modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
-                    Text(
-                        "${day.temperatureRange.first}℃ ~ ${day.temperatureRange.second}℃",
-                        style = TextStyle(
-                            fontSize = 20.sp,
-                            fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Normal,
-                        ), modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
+                    Row(
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .height(100.dp)
+                    ) {
+
+                        Column(modifier = Modifier.align(Alignment.CenterVertically)) {
+                            Text(
+                                "${day.temperatureRange.first}↑",
+                                style = TextStyle(
+                                    fontSize = 19.sp,
+                                    fontFamily = FontFamily.Monospace,
+                                    fontWeight = FontWeight.SemiBold,
+                                )
+                            )
+                            Spacer(modifier = Modifier.height(3.dp))
+                            Text(
+                                "${day.temperatureRange.second}↓",
+                                style = TextStyle(
+                                    fontSize = 19.sp,
+                                    fontFamily = FontFamily.Monospace,
+                                    fontWeight = FontWeight.SemiBold,
+                                )
+                            )
+                        }
+
+
+                        Text(
+                            "${day.averageTemperature}",
+                            style = TextStyle(
+                                fontSize = 70.sp,
+                                fontFamily = FontFamily.Monospace,
+                                fontWeight = FontWeight.SemiBold
+                            ),
+                            lineHeight = 0.sp,
+                            letterSpacing = 0.sp
+                        )
+                        Text(
+                            "℃",
+                            style = TextStyle(
+                                fontSize = 30.sp,
+                                fontFamily = FontFamily.Monospace,
+                                fontWeight = FontWeight.SemiBold
+                            ), modifier = Modifier.padding(top = 10.dp)
+                        )
+                    }
+
 
                 }
 
