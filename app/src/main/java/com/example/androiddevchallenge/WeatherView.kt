@@ -5,7 +5,10 @@ import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.Shader
 import android.graphics.Typeface
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
@@ -68,9 +71,12 @@ fun WeatherView() {
     val pagerState = remember { PagerState() }
     var selectedIndex by remember { mutableStateOf(0) }
     val selected = pagerState.selectionState
-    val selectedDay = remember(selectedIndex) {
-        dailyWeather[selectedIndex]
+    val (selectedDay, curWeather) = remember(selectedIndex) {
+        val day = dailyWeather[selectedIndex]
+        day to if (selectedIndex == 0) day.curHourlyWeather.weather
+        else day.weather
     }
+
     DisposableEffect(selected) {
         selectedIndex = pagerState.currentPage
         onDispose { }
@@ -84,6 +90,10 @@ fun WeatherView() {
         onDispose { }
     }
 
+    val color1 by backgroundColorState(curWeather.background.first)
+    val color2 by backgroundColorState(curWeather.background.second)
+    val color3 by backgroundColorState(curWeather.background.third)
+
     Column(
         modifier = Modifier
             .width(800.dp)
@@ -91,9 +101,9 @@ fun WeatherView() {
             .background(
                 brush = Brush.linearGradient(
                     listOf(
-                        Color.LightGray,
-                        Color.Gray,
-                        Color.White
+                        color1,
+                        color2,
+                        color3
                     )
                 )
             )
@@ -106,8 +116,7 @@ fun WeatherView() {
         ) {
             WeatherIcon(
                 Modifier.align(Alignment.Center),
-                if (selectedIndex == 0) selectedDay.curHourlyWeather.weather
-                else selectedDay.weather
+                curWeather
             )
         }
 
@@ -386,7 +395,7 @@ fun WeatherIcon(modifier: Modifier, weatherIcon: Weather) {
     val (cur, setCur) = remember { mutableStateOf(weatherIcon) }
     var trigger by remember { mutableStateOf(0f) }
 
-    DisposableEffect(weatherIcon.animatableIcon) {
+    DisposableEffect(weatherIcon.animatable) {
         trigger = 1f
         onDispose { }
     }
@@ -400,7 +409,7 @@ fun WeatherIcon(modifier: Modifier, weatherIcon: Weather) {
     )
 
     val composeInfo = remember(animateFloat) {
-        cur.animatableIcon + (weatherIcon.animatableIcon - cur.animatableIcon) * animateFloat
+        cur.animatable + (weatherIcon.animatable - cur.animatable) * animateFloat
     }
 
     ComposedIcon(
@@ -408,3 +417,10 @@ fun WeatherIcon(modifier: Modifier, weatherIcon: Weather) {
         composeInfo
     )
 }
+
+@Composable
+fun backgroundColorState(target: Color) =
+    animateColorAsState(
+        targetValue = target,
+        animationSpec = spring(stiffness = Spring.StiffnessLow)
+    )

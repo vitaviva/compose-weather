@@ -71,14 +71,14 @@ fun ComposedIcon(modifier: Modifier = Modifier, composeInfo: ComposeInfo) {
 @Preview
 @Composable
 fun PreviewSunrain() {
-    ComposedIcon(composeInfo = Weather.Sunnyrain.animatableIcon)
+    ComposedIcon(composeInfo = Weather.Sunnyrain.animatable)
 }
 
 
 @Preview
 @Composable
 fun PreviewSunny() {
-    ComposedIcon(composeInfo = Weather.Sunny.animatableIcon)
+    ComposedIcon(composeInfo = Weather.Sunny.animatable)
 }
 
 
@@ -86,5 +86,5 @@ fun PreviewSunny() {
 @Preview
 @Composable
 fun PreviewCloud() {
-    ComposedIcon(composeInfo = Weather.Cloud.animatableIcon)
+    ComposedIcon(composeInfo = Weather.Cloud.animatable)
 }
