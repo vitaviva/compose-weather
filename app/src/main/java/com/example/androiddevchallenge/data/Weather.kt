@@ -11,10 +11,12 @@ import com.example.androiddevchallenge.Sun
 
 
 enum class Weather(
+    val text: String = "",
     val animatableIcon: ComposeInfo,
     val icon: @Composable () -> Unit
 ) {
     Sunny(
+        "Clear",
         ComposeInfo(
             sun = IconInfo(200.dp, 0.dp to 0.dp),
             cloud = IconInfo(200.dp, (-100).dp to 0.dp, 0f),
@@ -22,6 +24,7 @@ enum class Weather(
         ), { Sun(Modifier.size(40.dp)) }
     ),
     Sunnyrain(
+        "Cloudy with occasional showers",
         ComposeInfo(
             sun = IconInfo(120.dp, 80.dp to 0.dp),
             cloud = IconInfo(200.dp, 0.dp to 0.dp),
@@ -29,6 +32,7 @@ enum class Weather(
         ), { Cloud(Modifier.size(40.dp)) }
     ),
     Cloud(
+        "Cloudy",
         ComposeInfo(
             sun = IconInfo(120.dp, 80.dp to 0.dp, alpha = 0f),
             cloud = IconInfo(200.dp, 0.dp to 0.dp),
