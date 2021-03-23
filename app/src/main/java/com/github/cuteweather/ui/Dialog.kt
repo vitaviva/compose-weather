@@ -1,4 +1,4 @@
-package com.example.androiddevchallenge.ui
+package com.github.cuteweather.ui
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
@@ -26,7 +26,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.androiddevchallenge.data.TemperatureUnit
+import com.github.cuteweather.data.TemperatureUnit
 
 
 @Composable

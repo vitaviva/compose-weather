@@ -1,4 +1,4 @@
-package com.example.androiddevchallenge.ui
+package com.github.cuteweather.ui
 
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp

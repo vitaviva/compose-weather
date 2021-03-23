@@ -1,4 +1,4 @@
-package com.example.androiddevchallenge.ui
+package com.github.cuteweather.ui
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.offset
@@ -8,9 +8,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.unit.dp
-import com.example.androiddevchallenge.ui.weathericon.AnimatableCloud
-import com.example.androiddevchallenge.ui.weathericon.AnimatableRains
-import com.example.androiddevchallenge.ui.weathericon.AnimatableSun
+import com.github.cuteweather.ui.weathericon.AnimatableCloud
+import com.github.cuteweather.ui.weathericon.AnimatableRains
+import com.github.cuteweather.ui.weathericon.AnimatableSun
 
 /**
  * show current weather's animation on top of [WeatherView]

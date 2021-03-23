@@ -1,10 +1,9 @@
-package com.example.androiddevchallenge
+package com.github.cuteweather
 
 import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.Shader
-import android.util.Log
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -48,7 +47,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Brush
@@ -67,22 +65,22 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.androiddevchallenge.data.DailyWeather
-import com.example.androiddevchallenge.data.LocalTemUnit
-import com.example.androiddevchallenge.data.TemperatureUnit
-import com.example.androiddevchallenge.data.Weather
-import com.example.androiddevchallenge.data.WeatherDataProvider
-import com.example.androiddevchallenge.data.averageTemperature
-import com.example.androiddevchallenge.data.curHourlyWeather
-import com.example.androiddevchallenge.data.dayOfMonth
-import com.example.androiddevchallenge.data.dayOfWeek
-import com.example.androiddevchallenge.data.displayName
-import com.example.androiddevchallenge.data.temperatureRange
-import com.example.androiddevchallenge.ui.ComposedIcon
-import com.example.androiddevchallenge.ui.Pager
-import com.example.androiddevchallenge.ui.PagerState
-import com.example.androiddevchallenge.ui.ShowDialog
-import com.example.androiddevchallenge.ui.theme.FontType
+import com.github.cuteweather.data.DailyWeather
+import com.github.cuteweather.data.LocalTemUnit
+import com.github.cuteweather.data.TemperatureUnit
+import com.github.cuteweather.data.Weather
+import com.github.cuteweather.data.WeatherDataProvider
+import com.github.cuteweather.data.averageTemperature
+import com.github.cuteweather.data.curHourlyWeather
+import com.github.cuteweather.data.dayOfMonth
+import com.github.cuteweather.data.dayOfWeek
+import com.github.cuteweather.data.displayName
+import com.github.cuteweather.data.temperatureRange
+import com.github.cuteweather.ui.ComposedIcon
+import com.github.cuteweather.ui.Pager
+import com.github.cuteweather.ui.PagerState
+import com.github.cuteweather.ui.ShowDialog
+import com.github.cuteweather.ui.theme.FontType
 import kotlin.math.abs
 
 
@@ -668,7 +666,7 @@ fun ActionBar(selected: TemperatureUnit, onSelect: (TemperatureUnit) -> Unit) {
             .background(
                 //TODO: auto hide
                 Brush.verticalGradient(
-                    listOf(Color.Black.copy(alpha = 0.5f), Color.Transparent)
+                    listOf(Color.Black.copy(alpha = 0.4f), Color.Transparent)
                 )
             )
     ) {

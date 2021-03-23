@@ -1,4 +1,4 @@
-package com.example.androiddevchallenge.data
+package com.github.cuteweather.data
 
 import android.os.Build
 import androidx.annotation.RequiresApi

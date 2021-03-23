@@ -1,4 +1,4 @@
-package com.example.androiddevchallenge.ui.weathericon
+package com.github.cuteweather.ui.weathericon
 
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.animateFloat

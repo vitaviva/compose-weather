@@ -1,7 +1,6 @@
-package com.example.androiddevchallenge.data
+package com.github.cuteweather.data
 
 import android.annotation.SuppressLint
-import androidx.compose.ui.util.fastSumBy
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.TextStyle
@@ -48,4 +47,4 @@ val DailyWeather.temperatureRange
 
 
 val DailyWeather.averageTemperature
-    get() = hourly.fastSumBy { it.temperature } / hourly.size
+    get() = hourly.sumBy { it.temperature } / hourly.size

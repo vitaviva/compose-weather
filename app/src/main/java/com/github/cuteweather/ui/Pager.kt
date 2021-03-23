@@ -18,7 +18,7 @@
 
 
 //copy from jetcaster
-package com.example.androiddevchallenge.ui
+package com.github.cuteweather.ui
 
 import androidx.compose.animation.core.Animatable
 import androidx.compose.foundation.gestures.Orientation
