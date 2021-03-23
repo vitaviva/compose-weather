@@ -6,12 +6,12 @@
 ![](https://img.shields.io/badge/jetpack_compose-1.0.0_beta02-green.svg)
 ![](https://img.shields.io/badge/min_sdk_versioin-23-orange.svg)
 
+CuteWeather is a beautiful weather app build in Jetpack Compose
 
 ## :scroll: Description
 <!--- Describe your app in one or two sentences -->
-<img src="app/src/main/res/drawable/ic_launcher.png" width=45 align=left >
 
-CuteWeather is a beautiful weather app build in Jetpack Compose
+<img src="app/src/main/res/drawable/ic_launcher.png" width=120 align=left >
 
 - Display weather info with cute animation
 - Daily and hourly temperature trends
@@ -23,13 +23,16 @@ see more:  [Android Dev Challenge: Week #4: Weather app](https://android-develop
 <!--- Optionally point readers to interesting parts of your submission. -->
 <!--- What are you especially proud of? -->
 
-Without GIF, Lottie or other static resources, all the UI elements are created by code with Jetpack Compose graphics, animations and so on.
+**Without GIF, Lottie or other static resources**, <br/>
+all the UI elements are created by code with Jetpack Compose graphics, animations and so on.
+
+
 <img src="/results/video.gif" width="260">&emsp;<img src="/results/video_2.gif" width="260">
 
 
 ## :camera_flash: Screenshots
 <!-- You can add more screenshots here if you like -->
-<img src="/results/screenshot_1.png" width="200">&emsp;<img src="/results/screenshot_2.png" width="200">&emsp;
+<img src="/results/screenshot_1.png" width="200">&emsp;<img src="/results/screenshot_2.png" width="200"> <br/>
 <img src="/results/screenshot_3.png" width="200">&emsp;<img src="/results/screenshot_4.png" width="200">
 
 ## License
