@@ -4,7 +4,7 @@
 <!--- You can find both of these in the url bar when you open your repository in github. -->
 ![Workflow result](https://github.com/vitaviva/compose-weather/workflows/Check/badge.svg)
 ![](https://img.shields.io/badge/jetpack_compose-1.0.0_beta02-green.svg)
-![](https://img.shields.io/badge/min_sdk_versioin-23-orange.svg)
+![](https://img.shields.io/badge/min_sdk_versioin-26-orange.svg)
 
 CuteWeather is a beautiful weather app build in Jetpack Compose
 
