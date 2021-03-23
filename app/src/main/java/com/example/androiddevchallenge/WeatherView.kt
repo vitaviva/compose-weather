@@ -36,6 +36,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.scale
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Brush
@@ -44,7 +45,6 @@ import androidx.compose.ui.graphics.PaintingStyle
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.PointMode
 import androidx.compose.ui.graphics.StrokeCap
-import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
@@ -56,13 +56,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.androiddevchallenge.data.DailyWeather
+import com.example.androiddevchallenge.data.Repo
 import com.example.androiddevchallenge.data.Weather
 import com.example.androiddevchallenge.data.averageTemperature
 import com.example.androiddevchallenge.data.curHourlyWeather
-import com.example.androiddevchallenge.data.dailyWeather
 import com.example.androiddevchallenge.data.dayOfMonth
 import com.example.androiddevchallenge.data.dayOfWeek
 import com.example.androiddevchallenge.data.temperatureRange
+import com.example.androiddevchallenge.ui.ComposedIcon
 import com.example.androiddevchallenge.ui.Pager
 import com.example.androiddevchallenge.ui.PagerState
 import kotlin.math.abs
@@ -75,12 +76,12 @@ fun WeatherView() {
     val pagerState = remember { PagerState() }
     var selectedIndex by remember { mutableStateOf(0) }
     val (selectedDay, curWeather) = remember(selectedIndex) {
-        val day = dailyWeather[selectedIndex]
+        val day = Repo.dailyWeather[selectedIndex]
         day to if (selectedIndex == 0) day.curHourlyWeather.weather
         else day.weather
     }
     DisposableEffect(Unit) {
-        pagerState.maxPage = (dailyWeather.size - 1).coerceAtLeast(0)
+        pagerState.maxPage = (Repo.dailyWeather.size - 1).coerceAtLeast(0)
         onDispose { }
     }
     DisposableEffect(pagerState.selectionState) {
@@ -103,11 +104,7 @@ fun WeatherView() {
             .fillMaxHeight()
             .background(
                 brush = Brush.linearGradient(
-                    listOf(
-                        color1,
-                        color2,
-                        color3
-                    )
+                    listOf(color1, color2, color3)
                 )
             )
     ) {
@@ -121,94 +118,13 @@ fun WeatherView() {
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        Pager(
-            state = pagerState,
-            modifier = Modifier
+        WeatherInfoPager(
+            Modifier
                 .weight(1f)
-                .align(Alignment.CenterHorizontally)
-        ) {
-
-            val day = dailyWeather[page]
-
-            Box(
-                modifier = Modifier.fillMaxSize()
-            ) {
-                Column(modifier = Modifier.align(Alignment.TopCenter)) {
-
-                    Text(
-                        day.dayOfMonth,
-                        style = TextStyle(
-                            fontSize = 20.sp,
-                            fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Normal,
-                            textAlign = TextAlign.Center,
-                        ), modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
-                    Text(
-                        day.weather.text,
-                        style = TextStyle(
-                            fontSize = 20.sp,
-                            fontFamily = FontFamily.Monospace,
-                            fontWeight = FontWeight.Normal,
-                        ), modifier = Modifier.align(Alignment.CenterHorizontally)
-                    )
-
-                    Spacer(modifier = Modifier.height(10.dp))
-
-                    Row(
-                        modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
-                            .height(100.dp)
-                    ) {
-
-                        Column(modifier = Modifier.align(Alignment.CenterVertically)) {
-                            Text(
-                                "${day.temperatureRange.first}↑",
-                                style = TextStyle(
-                                    fontSize = 19.sp,
-                                    fontFamily = FontFamily.Monospace,
-                                    fontWeight = FontWeight.SemiBold,
-                                ),modifier = Modifier.align(Alignment.End)
-                            )
-                            Spacer(modifier = Modifier.height(3.dp))
-                            Text(
-                                "${day.temperatureRange.second}↓",
-                                style = TextStyle(
-                                    fontSize = 19.sp,
-                                    fontFamily = FontFamily.Monospace,
-                                    fontWeight = FontWeight.SemiBold,
-                                ),modifier = Modifier.align(Alignment.End)
-                            )
-                        }
-
-
-                        Text(
-                            "${day.averageTemperature}",
-                            style = TextStyle(
-                                fontSize = 70.sp,
-                                fontFamily = FontFamily.Monospace,
-                                fontWeight = FontWeight.SemiBold
-                            ),
-                            lineHeight = 0.sp,
-                            letterSpacing = 0.sp
-                        )
-                        Text(
-                            "℃",
-                            style = TextStyle(
-                                fontSize = 30.sp,
-                                fontFamily = FontFamily.Monospace,
-                                fontWeight = FontWeight.SemiBold
-                            ), modifier = Modifier.padding(top = 10.dp)
-                        )
-                    }
-
-
-                }
-
-            }
-
-
-        }
+                .align(Alignment.CenterHorizontally),
+            pagerState = pagerState,
+            dailyWeathers = Repo.dailyWeather
+        )
 
         HourlyWeatherChart(dailyWeather = selectedDay)
 
@@ -218,12 +134,107 @@ fun WeatherView() {
                 .height(0.5.dp)
         )
 
-        DailyWeatherChart(dailyWeathers = dailyWeather) {
+        DailyWeatherChart(
+            dailyWeathers = Repo.dailyWeather,
+            selectedIndex = selectedIndex
+        ) {
             selectedIndex = it
         }
     }
 }
 
+
+/**
+ * Pager showing weather info
+ */
+@Composable
+fun WeatherInfoPager(
+    modifier: Modifier = Modifier,
+    pagerState: PagerState,
+    dailyWeathers: List<DailyWeather>
+) {
+    Pager(
+        state = pagerState,
+        modifier = modifier
+    ) {
+
+        val day = dailyWeathers[page]
+
+        Column(modifier = Modifier.fillMaxSize()) {
+
+            Text(
+                day.dayOfMonth,
+                style = TextStyle(
+                    fontSize = 20.sp,
+                    fontFamily = FontFamily.Monospace,
+                    fontWeight = FontWeight.Normal,
+                    textAlign = TextAlign.Center,
+                ), modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+            Text(
+                day.weather.text,
+                style = TextStyle(
+                    fontSize = 20.sp,
+                    fontFamily = FontFamily.Monospace,
+                    fontWeight = FontWeight.Normal,
+                ), modifier = Modifier.align(Alignment.CenterHorizontally)
+            )
+
+            Spacer(modifier = Modifier.height(10.dp))
+
+            Row(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .height(100.dp)
+            ) {
+
+                Column(modifier = Modifier.align(Alignment.CenterVertically)) {
+                    Text(
+                        "${day.temperatureRange.first}↑",
+                        style = TextStyle(
+                            fontSize = 19.sp,
+                            fontFamily = FontFamily.Monospace,
+                            fontWeight = FontWeight.SemiBold,
+                        ), modifier = Modifier.align(Alignment.End)
+                    )
+                    Spacer(modifier = Modifier.height(3.dp))
+                    Text(
+                        "${day.temperatureRange.second}↓",
+                        style = TextStyle(
+                            fontSize = 19.sp,
+                            fontFamily = FontFamily.Monospace,
+                            fontWeight = FontWeight.SemiBold,
+                        ), modifier = Modifier.align(Alignment.End)
+                    )
+                }
+
+
+                Text(
+                    "${day.averageTemperature}",
+                    style = TextStyle(
+                        fontSize = 70.sp,
+                        fontFamily = FontFamily.Monospace,
+                        fontWeight = FontWeight.SemiBold
+                    ),
+                    lineHeight = 0.sp,
+                    letterSpacing = 0.sp
+                )
+                Text(
+                    "℃",
+                    style = TextStyle(
+                        fontSize = 30.sp,
+                        fontFamily = FontFamily.Monospace,
+                        fontWeight = FontWeight.SemiBold
+                    ), modifier = Modifier.padding(top = 10.dp)
+                )
+            }
+
+
+        }
+
+
+    }
+}
 
 /**
  * Daily weather chart
@@ -232,6 +243,7 @@ fun WeatherView() {
 fun DailyWeatherChart(
     modifier: Modifier = Modifier,
     dailyWeathers: List<DailyWeather>,
+    selectedIndex: Int,
     onSelect: (index: Int) -> Unit
 ) {
 
@@ -239,18 +251,18 @@ fun DailyWeatherChart(
 
         Canvas(
             modifier = Modifier
-                .height(45.dp)
+                .height(60.dp)
                 .fillMaxWidth()
-                .padding(bottom = 30.dp)
+                .padding(bottom = 35.dp)
                 .align(Alignment.BottomCenter)
         ) {
 
             val increment = size.width / dailyWeathers.size
-            val min = dailyWeather.minOf { it.averageTemperature }
-            val max = dailyWeather.maxOf { it.averageTemperature }
+            val min = dailyWeathers.minOf { it.averageTemperature }
+            val max = dailyWeathers.maxOf { it.averageTemperature }
             val dy = (max - min).toFloat()
 
-            val points = dailyWeather.mapIndexed { index, dailyWeather ->
+            val points = dailyWeathers.mapIndexed { index, dailyWeather ->
                 Offset(
                     increment * index + increment / 2,
                     (1 - (dailyWeather.averageTemperature - min) / dy) * size.height
@@ -269,8 +281,8 @@ fun DailyWeatherChart(
                 //draw path
                 canvas.drawPath(path, androidx.compose.ui.graphics.Paint().apply {
                     style = PaintingStyle.Stroke
-                    strokeWidth = 0.5.dp.toPx()
-                    pathEffect = PathEffect.cornerPathEffect(40f)
+                    strokeWidth = 1.dp.toPx()
+                    pathEffect = PathEffect.cornerPathEffect(50f)
                 })
 
 
@@ -283,23 +295,30 @@ fun DailyWeatherChart(
                     typeface = Typeface.MONOSPACE
 
                 }
-                dailyWeather.asSequence().zip(points.asSequence())
+                dailyWeathers.asSequence().zip(points.asSequence())
                     .forEachIndexed { index, pair ->
                         val (weather, points) = pair
-                        //draw round background
-                        val radius = size * 0.9f
-                        drawCircle(Color.White, radius, Offset(points.x + size / 4, points.y))
+//                        //draw round background
+//                        val radius = size * 0.9f
+//                        drawCircle(Color.White, radius, Offset(points.x + size / 4, points.y))
+//                        drawCircle(
+//                            Color.Black,
+//                            radius,
+//                            Offset(points.x + size / 6, points.y + size / 10),
+//                            style = Stroke(width = 1.dp.toPx())
+//                        )
+
+                        //draw points
                         drawCircle(
                             Color.Black,
-                            radius,
-                            Offset(points.x + size / 6, points.y + size / 10),
-                            style = Stroke(width = 1.dp.toPx())
+                            1.5.dp.toPx(),
+                            Offset(points.x, points.y)
                         )
 
                         canvas.nativeCanvas.drawText(
                             "${weather.averageTemperature}",
                             points.x - size / 2,
-                            points.y + size / 2,
+                            points.y + size * 1.5f,
                             textPaint
                         )
                     }
@@ -309,7 +328,7 @@ fun DailyWeatherChart(
 
         Row(
             modifier = Modifier
-                .height(130.dp)
+                .height(170.dp)
                 .fillMaxWidth()
         ) {
             (dailyWeathers.indices).forEach {
@@ -324,7 +343,7 @@ fun DailyWeatherChart(
                     Column(
                         Modifier.align(Alignment.TopCenter)
                     ) {
-                        Spacer(modifier = Modifier.height(15.dp))
+                        Spacer(modifier = Modifier.height(20.dp))
 
                         Text(
                             text = when (it) {
@@ -341,7 +360,11 @@ fun DailyWeatherChart(
                             modifier = Modifier
                                 .padding(5.dp)
                         ) {
-                            dailyWeathers[it].weather.icon()
+                            if (it == selectedIndex) {
+                                dailyWeathers[it].weather.animatableIcon()
+                            } else {
+                                dailyWeathers[it].weather.icon()
+                            }
                         }
 
                     }
@@ -351,9 +374,10 @@ fun DailyWeatherChart(
                 if (it < 6)
                     Divider(
                         Modifier
-                            .height(80.dp)
+                            .height(120.dp)
                             .width(0.5.dp)
-                            .align(Alignment.CenterVertically)
+                            .padding(top = 20.dp)
+                            .align(Alignment.Top)
                     )
 
             }
@@ -397,8 +421,9 @@ fun HourlyWeatherChart(
                         ) {
                             Box(
                                 modifier = Modifier
-                                    .padding(start = 6.dp, end = 6.dp)
+//                                    .padding(start = 6.dp, end = 6.dp)
                                     .align(Alignment.CenterHorizontally)
+                                    .scale(0.6f)
                             ) {
                                 it.weather.icon()
                             }
@@ -555,7 +580,7 @@ fun WeatherIcon(modifier: Modifier, weatherIcon: Weather) {
     val (cur, setCur) = remember { mutableStateOf(weatherIcon) }
     var trigger by remember { mutableStateOf(0f) }
 
-    DisposableEffect(weatherIcon.animatable) {
+    DisposableEffect(weatherIcon.composedIcon) {
         trigger = 1f
         onDispose { }
     }
@@ -570,7 +595,7 @@ fun WeatherIcon(modifier: Modifier, weatherIcon: Weather) {
 
 
     val composeInfo = remember(animateFloat) {
-        cur.animatable + (weatherIcon.animatable - cur.animatable) * animateFloat
+        cur.composedIcon + (weatherIcon.composedIcon - cur.composedIcon) * animateFloat
     }
 
     ComposedIcon(
@@ -580,7 +605,7 @@ fun WeatherIcon(modifier: Modifier, weatherIcon: Weather) {
 }
 
 @Composable
-fun backgroundColorState(target: Color) =
+private fun backgroundColorState(target: Color) =
     animateColorAsState(
         targetValue = target,
         animationSpec = spring(stiffness = Spring.StiffnessLow)

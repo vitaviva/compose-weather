@@ -1,4 +1,4 @@
-package com.example.androiddevchallenge
+package com.example.androiddevchallenge.ui.weathericon
 
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -20,22 +20,20 @@ import androidx.compose.ui.unit.dp
 import com.example.androiddevchallenge.R
 
 @Composable
-fun AnimatableCloud(modifier: Modifier = Modifier) {
-    Box(modifier = Modifier.padding(start = 20.dp, end = 20.dp)) {
+fun AnimatableCloud(modifier: Modifier = Modifier, durationMills: Int = 1500) {
 
-        val transition = rememberInfiniteTransition()
+    val transition = rememberInfiniteTransition()
 
-        val animateTween by transition.animateFloat(
-            initialValue = -1f,
-            targetValue = 1f,
-            animationSpec = infiniteRepeatable(
-                tween(1500, easing = LinearEasing),
-                RepeatMode.Reverse
-            )
+    val animateTween by transition.animateFloat(
+        initialValue = -1f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            tween(durationMills, easing = LinearEasing),
+            RepeatMode.Reverse
         )
+    )
 
-        Cloud(modifier = modifier.offset(5.dp * animateTween))
-    }
+    Cloud(modifier = modifier.offset(5.dp * animateTween))
 
 }
 
@@ -53,7 +51,7 @@ fun Cloud(modifier: Modifier = Modifier) {
 
 @Preview
 @Composable
-fun previewCloud() {
+fun PreviewAnimatableCloud() {
     AnimatableCloud()
 }
 
