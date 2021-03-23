@@ -70,7 +70,6 @@ private fun DialogContent(
             Modifier
                 .width(200.dp)
                 .height(100.dp)
-                .padding(20.dp)
         ) {
             Box(
                 Modifier
@@ -83,7 +82,7 @@ private fun DialogContent(
                     text = TemperatureUnit.Fahrenheit.text,
                     modifier = Modifier
                         .align(Alignment.CenterStart)
-                        .padding(start = 10.dp),
+                        .padding(start = 30.dp),
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 30.sp,
                     color = Color.Black,
@@ -99,7 +98,7 @@ private fun DialogContent(
                     text = TemperatureUnit.Centigrade.text,
                     modifier = Modifier
                         .align(Alignment.CenterEnd)
-                        .padding(end = 10.dp),
+                        .padding(end = 30.dp),
                     fontWeight = FontWeight.SemiBold,
                     fontSize = 30.sp,
                     color = Color.Black

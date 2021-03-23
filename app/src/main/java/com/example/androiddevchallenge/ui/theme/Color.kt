@@ -24,5 +24,6 @@ val teal200 = Color(0xFF03DAC5)
 val teal500 = Color(0xFF3F9CE6)
 val teal700 = Color(0xFFCCE6F1)
 
-
+val yellow200 = Color(0xFFF7F2CB)
+val yellow500 = Color(0xFFF7E7CB)
 val teal900 = Color(0xFF7FD5FA)

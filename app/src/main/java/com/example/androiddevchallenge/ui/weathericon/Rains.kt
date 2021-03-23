@@ -9,9 +9,14 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -100,14 +105,15 @@ private fun Raindrop(modifier: Modifier = Modifier, spacePosition: Float = 0f) {
 
 
 @Composable
-fun AnimatableRains(modifier: Modifier = Modifier) {
-    Rains(modifier, true)
+fun AnimatableRains(modifier: Modifier = Modifier, lightRain: Boolean = false) {
+    Rains(modifier, true, lightRain)
 }
 
 @Composable
 fun Rains(
     modifier: Modifier = Modifier,
-    animate: Boolean = false
+    animate: Boolean = false,
+    lightRain: Boolean = false,
 ) {
 
     Layout(modifier = modifier.rotate(30f), content = {
@@ -125,12 +131,14 @@ fun Rains(
                     .fillMaxHeight(),
                 600
             )
-            AnimatableRaindrop(
-                modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(),
-                600
-            )
+            if (!lightRain) {
+                AnimatableRaindrop(
+                    modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(),
+                    600
+                )
+            }
 
         } else {
             Raindrop(
@@ -143,11 +151,13 @@ fun Rains(
                     .fillMaxWidth()
                     .fillMaxHeight(),
             )
-            Raindrop(
-                modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(),
-            )
+            if (!lightRain) {
+                Raindrop(
+                    modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(),
+                )
+            }
         }
 
     }) { measurables, constraints ->
@@ -166,7 +176,7 @@ fun Rains(
                 constraints.copy(
                     minWidth = 0,
                     minHeight = 0,
-                    maxWidth = constraints.maxWidth / 10,
+                    maxWidth = constraints.maxWidth / 10, //raindrop width
                     maxHeight = height.toInt(),
                 )
             )
@@ -175,7 +185,7 @@ fun Rains(
         // Set the size of the layout as big as it can
         layout(constraints.maxWidth, constraints.maxHeight) {
             // Track the y co-ord we have placed children up to
-            var xPosition = constraints.maxWidth / 8
+            var xPosition = constraints.maxWidth / ((placeables.size + 1) * 2)
 
             // Place children in the parent layout
             placeables.forEachIndexed { index, placeable ->
@@ -183,7 +193,7 @@ fun Rains(
                 placeable.place(x = xPosition, y = 0)
 
                 // Record the y co-ord placed up to
-                xPosition += (constraints.maxWidth / 3.4).roundToInt()
+                xPosition += (constraints.maxWidth / ((placeables.size + 1) * 0.8f)).roundToInt()
             }
         }
     }
@@ -194,8 +204,23 @@ fun Rains(
 @Preview
 @Composable
 fun PreviewRains() {
-    Column {
-        Rains(modifier = Modifier.size(300.dp))
-        AnimatableRains(modifier = Modifier.size(300.dp))
+    Row {
+        Column {
+            Rains(modifier = Modifier.size(150.dp))
+            Spacer(Modifier.height(5.dp))
+            AnimatableRains(modifier = Modifier.size(150.dp))
+        }
+        Divider(
+            Modifier
+                .height(300.dp)
+                .padding(10.dp)
+                .width(1.dp)
+        )
+        Column {
+            Rains(modifier = Modifier.size(150.dp), lightRain = true)
+            Spacer(Modifier.height(5.dp))
+            AnimatableRains(modifier = Modifier.size(150.dp), lightRain = true)
+        }
+
     }
 }

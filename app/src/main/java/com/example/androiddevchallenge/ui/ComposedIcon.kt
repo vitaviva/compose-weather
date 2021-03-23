@@ -18,7 +18,7 @@ import com.example.androiddevchallenge.ui.weathericon.AnimatableSun
 @Composable
 fun ComposedIcon(modifier: Modifier = Modifier, composeInfo: ComposeInfo) {
 
-    val (sun, cloud, cloud2, rains) = composeInfo
+    val (sun, cloud, lightCloud, rains, lightRain) = composeInfo
     Box(modifier = modifier.size(200.dp)) {
 
         AnimatableSun(
@@ -35,6 +35,13 @@ fun ComposedIcon(modifier: Modifier = Modifier, composeInfo: ComposeInfo) {
                 .alpha(rains.alpha)
         )
 
+        //light rain
+        AnimatableRains(
+            Modifier
+                .size(lightRain.size)
+                .offset(lightRain.offset.first, lightRain.offset.second)
+                .alpha(lightRain.alpha), true
+        )
 
         AnimatableCloud(
             Modifier
@@ -44,11 +51,12 @@ fun ComposedIcon(modifier: Modifier = Modifier, composeInfo: ComposeInfo) {
                 .padding(start = 20.dp, end = 20.dp)
         )
 
+        //light cloud
         AnimatableCloud(
             Modifier
-                .size(cloud2.size)
-                .offset(cloud2.offset.first, cloud2.offset.second)
-                .alpha(cloud2.alpha),
+                .size(lightCloud.size)
+                .offset(lightCloud.offset.first, lightCloud.offset.second)
+                .alpha(lightCloud.alpha),
             1000
         )
     }
