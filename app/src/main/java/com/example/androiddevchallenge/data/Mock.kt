@@ -5,6 +5,9 @@ import androidx.annotation.RequiresApi
 import java.time.LocalDate
 
 
+/**
+ * note：temperature data use "℃" as default
+ */
 private val hourlyWeather = listOf(
     listOf(
         HourlyWeather(5, Weather.Clear),
@@ -191,7 +194,7 @@ private val hourlyWeather = listOf(
 )
 
 
-object Repo {
+object WeatherDataProvider {
     @RequiresApi(Build.VERSION_CODES.O)
     val dailyWeather =
         (0..6).map {

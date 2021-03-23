@@ -4,13 +4,19 @@ import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.Shader
-import android.graphics.Typeface
+import android.util.Log
 import androidx.compose.animation.animateColorAsState
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloat
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -21,13 +27,18 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.material.Divider
 import androidx.compose.material.Text
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -37,10 +48,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.PaintingStyle
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.PointMode
@@ -49,23 +62,27 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.androiddevchallenge.data.DailyWeather
-import com.example.androiddevchallenge.data.Repo
+import com.example.androiddevchallenge.data.LocalTemUnit
+import com.example.androiddevchallenge.data.TemperatureUnit
 import com.example.androiddevchallenge.data.Weather
+import com.example.androiddevchallenge.data.WeatherDataProvider
 import com.example.androiddevchallenge.data.averageTemperature
 import com.example.androiddevchallenge.data.curHourlyWeather
 import com.example.androiddevchallenge.data.dayOfMonth
 import com.example.androiddevchallenge.data.dayOfWeek
+import com.example.androiddevchallenge.data.displayName
 import com.example.androiddevchallenge.data.temperatureRange
 import com.example.androiddevchallenge.ui.ComposedIcon
 import com.example.androiddevchallenge.ui.Pager
 import com.example.androiddevchallenge.ui.PagerState
+import com.example.androiddevchallenge.ui.ShowDialog
+import com.example.androiddevchallenge.ui.theme.FontType
 import kotlin.math.abs
 
 
@@ -73,19 +90,24 @@ import kotlin.math.abs
 @Composable
 fun WeatherView() {
 
-    val pagerState = remember { PagerState() }
-    var selectedIndex by remember { mutableStateOf(0) }
-    val (selectedDay, curWeather) = remember(selectedIndex) {
-        val day = Repo.dailyWeather[selectedIndex]
+    val (tempUnit, setTempUnit) = remember { mutableStateOf(TemperatureUnit.Fahrenheit) } // F or C
+
+    val pagerState = remember { PagerState() }// state used for pager
+
+    var selectedIndex by remember { mutableStateOf(0) } // selected index of paager
+
+    val (selectedDay, curWeather) = remember(selectedIndex) { // selectDay and current weather
+        val day = WeatherDataProvider.dailyWeather[selectedIndex]
         day to if (selectedIndex == 0) day.curHourlyWeather.weather
         else day.weather
     }
+
     DisposableEffect(Unit) {
-        pagerState.maxPage = (Repo.dailyWeather.size - 1).coerceAtLeast(0)
+        pagerState.maxPage = (WeatherDataProvider.dailyWeather.size - 1).coerceAtLeast(0)
         onDispose { }
     }
     DisposableEffect(pagerState.selectionState) {
-        //whenever pager changed，get latest index
+        //whenever pager changed，get newest index
         selectedIndex = pagerState.currentPage
         onDispose { }
     }
@@ -98,49 +120,59 @@ fun WeatherView() {
     val color2 by backgroundColorState(curWeather.background.second)
     val color3 by backgroundColorState(curWeather.background.third)
 
-    Column(
-        modifier = Modifier
-            .width(800.dp)
-            .fillMaxHeight()
-            .background(
-                brush = Brush.linearGradient(
-                    listOf(color1, color2, color3)
+    CompositionLocalProvider(LocalTemUnit provides tempUnit) {
+        Box {
+
+            Column(
+                modifier = Modifier
+                    .width(800.dp)
+                    .fillMaxHeight()
+                    .background(
+                        brush = Brush.linearGradient(
+                            listOf(color1, color2, color3)
+                        )
+                    )
+            ) {
+
+                Spacer(modifier = Modifier.height(30.dp))
+
+                WeatherIcon(
+                    Modifier.align(Alignment.CenterHorizontally),
+                    curWeather
                 )
-            )
-    ) {
 
-        Spacer(modifier = Modifier.height(30.dp))
+                Spacer(modifier = Modifier.height(20.dp))
 
-        WeatherIcon(
-            Modifier.align(Alignment.CenterHorizontally),
-            curWeather
-        )
+                WeatherInfoPager(
+                    Modifier
+                        .weight(1f)
+                        .align(Alignment.CenterHorizontally),
+                    pagerState = pagerState,
+                    dailyWeathers = WeatherDataProvider.dailyWeather
+                )
 
-        Spacer(modifier = Modifier.height(20.dp))
+                HourlyWeatherChart(dailyWeather = selectedDay)
 
-        WeatherInfoPager(
-            Modifier
-                .weight(1f)
-                .align(Alignment.CenterHorizontally),
-            pagerState = pagerState,
-            dailyWeathers = Repo.dailyWeather
-        )
+                Divider(
+                    Modifier
+                        .padding(top = 10.dp)
+                        .height(0.5.dp)
+                )
 
-        HourlyWeatherChart(dailyWeather = selectedDay)
+                DailyWeatherChart(
+                    dailyWeathers = WeatherDataProvider.dailyWeather,
+                    selectedIndex = selectedIndex
+                ) {
+                    selectedIndex = it
+                }
+            }
 
-        Divider(
-            Modifier
-                .padding(top = 10.dp)
-                .height(0.5.dp)
-        )
+            ActionBar(tempUnit, setTempUnit)
 
-        DailyWeatherChart(
-            dailyWeathers = Repo.dailyWeather,
-            selectedIndex = selectedIndex
-        ) {
-            selectedIndex = it
         }
     }
+
+
 }
 
 
@@ -166,7 +198,7 @@ fun WeatherInfoPager(
                 day.dayOfMonth,
                 style = TextStyle(
                     fontSize = 20.sp,
-                    fontFamily = FontFamily.Monospace,
+                    fontFamily = FontType.fontFamily,
                     fontWeight = FontWeight.Normal,
                     textAlign = TextAlign.Center,
                 ), modifier = Modifier.align(Alignment.CenterHorizontally)
@@ -175,7 +207,7 @@ fun WeatherInfoPager(
                 day.weather.text,
                 style = TextStyle(
                     fontSize = 20.sp,
-                    fontFamily = FontFamily.Monospace,
+                    fontFamily = FontType.fontFamily,
                     fontWeight = FontWeight.Normal,
                 ), modifier = Modifier.align(Alignment.CenterHorizontally)
             )
@@ -190,40 +222,49 @@ fun WeatherInfoPager(
 
                 Column(modifier = Modifier.align(Alignment.CenterVertically)) {
                     Text(
-                        "${day.temperatureRange.first}↑",
+                        "${day.temperatureRange.first.displayName(LocalTemUnit.current)}↑",
                         style = TextStyle(
                             fontSize = 19.sp,
-                            fontFamily = FontFamily.Monospace,
+                            fontFamily = FontType.fontFamily,
                             fontWeight = FontWeight.SemiBold,
                         ), modifier = Modifier.align(Alignment.End)
                     )
                     Spacer(modifier = Modifier.height(3.dp))
                     Text(
-                        "${day.temperatureRange.second}↓",
+                        "${day.temperatureRange.second.displayName(LocalTemUnit.current)}↓",
                         style = TextStyle(
                             fontSize = 19.sp,
-                            fontFamily = FontFamily.Monospace,
+                            fontFamily = FontType.fontFamily,
                             fontWeight = FontWeight.SemiBold,
                         ), modifier = Modifier.align(Alignment.End)
                     )
                 }
 
 
+                val animateTween by rememberInfiniteTransition().animateFloat(
+                    initialValue = -1f,
+                    targetValue = 1f,
+                    animationSpec = infiniteRepeatable(
+                        tween(2000, easing = LinearEasing),
+                        RepeatMode.Reverse
+                    )
+                )
+
                 Text(
-                    "${day.averageTemperature}",
+                    day.averageTemperature.displayName(LocalTemUnit.current),
                     style = TextStyle(
                         fontSize = 70.sp,
-                        fontFamily = FontFamily.Monospace,
+                        fontFamily = FontType.fontFamily,
                         fontWeight = FontWeight.SemiBold
                     ),
-                    lineHeight = 0.sp,
-                    letterSpacing = 0.sp
+                    letterSpacing = 0.sp,
+                    modifier = Modifier.offset(0.dp, (-5).dp * animateTween)
                 )
                 Text(
-                    "℃",
+                    LocalTemUnit.current.text,
                     style = TextStyle(
                         fontSize = 30.sp,
-                        fontFamily = FontFamily.Monospace,
+                        fontFamily = FontType.fontFamily,
                         fontWeight = FontWeight.SemiBold
                     ), modifier = Modifier.padding(top = 10.dp)
                 )
@@ -249,6 +290,7 @@ fun DailyWeatherChart(
 
     Box(modifier = modifier.fillMaxWidth()) {
 
+        val tempUnit = LocalTemUnit.current
         Canvas(
             modifier = Modifier
                 .height(60.dp)
@@ -288,11 +330,10 @@ fun DailyWeatherChart(
 
                 //draw text
                 val size = 10.sp.toPx()
-
                 val textPaint = Paint().apply {
                     color = Color.Black.toArgb()
                     textSize = size
-                    typeface = Typeface.MONOSPACE
+                    typeface = FontType.typeface
 
                 }
                 dailyWeathers.asSequence().zip(points.asSequence())
@@ -316,7 +357,7 @@ fun DailyWeatherChart(
                         )
 
                         canvas.nativeCanvas.drawText(
-                            "${weather.averageTemperature}",
+                            weather.averageTemperature.displayName(tempUnit),
                             points.x - size / 2,
                             points.y + size * 1.5f,
                             textPaint
@@ -421,7 +462,6 @@ fun HourlyWeatherChart(
                         ) {
                             Box(
                                 modifier = Modifier
-//                                    .padding(start = 6.dp, end = 6.dp)
                                     .align(Alignment.CenterHorizontally)
                                     .scale(0.6f)
                             ) {
@@ -454,7 +494,10 @@ fun HourlyWeatherChart(
  * show with animation
  */
 @Composable
-fun LineChart(modifier: Modifier, dailyWeather: DailyWeather) {
+fun LineChart(
+    modifier: Modifier,
+    dailyWeather: DailyWeather
+) {
 
     val (cur, setCur) = remember { mutableStateOf<DailyWeather?>(null) }
 
@@ -473,6 +516,7 @@ fun LineChart(modifier: Modifier, dailyWeather: DailyWeather) {
         trigger = 0f
     }
 
+    val tempUnit = LocalTemUnit.current
     Canvas(modifier) {
 
         val increment = size.width / dailyWeather.hourly.size
@@ -553,14 +597,14 @@ fun LineChart(modifier: Modifier, dailyWeather: DailyWeather) {
                 color = Color.Black.toArgb()
                 textSize = size
                 alpha = 90
-                typeface = Typeface.MONOSPACE
+                typeface = FontType.typeface
 
             }
             dailyWeather.hourly.asSequence().zip(points.asSequence())
                 .forEachIndexed { index, pair ->
                     val (weather, points) = pair
                     canvas.nativeCanvas.drawText(
-                        "${weather.temperature}",
+                        weather.temperature.displayName(tempUnit),
                         points.x - size / 2,
                         points.y - size / 1.5f,
                         textPaint
@@ -610,3 +654,46 @@ private fun backgroundColorState(target: Color) =
         targetValue = target,
         animationSpec = spring(stiffness = Spring.StiffnessLow)
     )
+
+
+/**
+ * transparent ActionBar with more-opt menu
+ */
+@Composable
+fun ActionBar(selected: TemperatureUnit, onSelect: (TemperatureUnit) -> Unit) {
+    Box(
+        Modifier
+            .height(100.dp)
+            .fillMaxWidth()
+            .background(
+                //TODO: auto hide
+                Brush.verticalGradient(
+                    listOf(Color.Black.copy(alpha = 0.5f), Color.Transparent)
+                )
+            )
+    ) {
+        var showDialogState by remember { mutableStateOf(false) }
+
+        if (showDialogState) {
+            ShowDialog(selected) {
+                onSelect(it)
+                showDialogState = false
+            }
+        }
+
+        Image(
+            Icons.Default.MoreVert,
+            "More operations",
+            Modifier
+                .size(50.dp)
+                .offset((-2).dp, 30.dp)
+                .clickable {
+                    showDialogState = true
+                }
+                .padding(10.dp)
+                .align(Alignment.TopEnd),
+            colorFilter = ColorFilter.tint(Color.White)
+        )
+
+    }
+}

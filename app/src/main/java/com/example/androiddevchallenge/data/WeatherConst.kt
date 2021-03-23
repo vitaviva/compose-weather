@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -259,4 +260,11 @@ fun PreviewClear() {
 fun PreviewCloudy() {
     ComposedIcon(composeInfo = CloudyComposed)
 }
+
+
+enum class TemperatureUnit(val text: String) {
+    Fahrenheit("℉"), Centigrade("℃")
+}
+
+val LocalTemUnit = compositionLocalOf<TemperatureUnit> { error("No data found!") }
 

@@ -6,6 +6,7 @@ import java.time.LocalDate
 import java.time.LocalTime
 import java.time.format.TextStyle
 import java.util.*
+import kotlin.math.roundToInt
 
 data class DailyWeather(
     val date: LocalDate,
@@ -16,6 +17,12 @@ data class DailyWeather(
 data class HourlyWeather(
     val temperature: Int, val weather: Weather
 )
+
+// display name of temperature
+fun Int.displayName(temperatureUnit: TemperatureUnit) =
+    if (temperatureUnit == TemperatureUnit.Centigrade) this.toString()
+    else (this * 1.8f + 32).roundToInt().toString()
+
 
 val DailyWeather.dayOfMonth
     @SuppressLint("NewApi")
@@ -37,7 +44,7 @@ val DailyWeather.curHourlyWeather
 
 
 val DailyWeather.temperatureRange
-    get() = hourly.minOf { it.temperature } to hourly.maxOf { it.temperature }
+    get() = hourly.maxOf { it.temperature } to hourly.minOf { it.temperature }
 
 
 val DailyWeather.averageTemperature

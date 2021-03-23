@@ -15,6 +15,7 @@
  */
 package com.example.androiddevchallenge.ui.theme
 
+import android.graphics.Typeface
 import androidx.compose.material.Typography
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontFamily
@@ -41,3 +42,9 @@ val typography = Typography(
     )
     */
 )
+
+
+object FontType {
+    val fontFamily = FontFamily.Default
+    val typeface = Typeface.SANS_SERIF
+}
