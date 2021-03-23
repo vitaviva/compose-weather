@@ -1,3 +1,18 @@
+/*
+ * Copyright 2021 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.github.cuteweather.ui.weathericon
 
 import androidx.compose.animation.core.LinearEasing
@@ -32,7 +47,6 @@ import kotlin.math.max
 import kotlin.math.min
 import kotlin.math.roundToInt
 
-
 @Composable
 private fun AnimatableRaindrop(modifier: Modifier = Modifier, durationMillis: Int = 800) {
 
@@ -55,29 +69,29 @@ private fun Raindrop(modifier: Modifier = Modifier, spacePosition: Float = 0f) {
 
     Canvas(modifier) {
 
-        //scope
+        // scope
         val width = size.width
         val x: Float = size.width / 2
         val scopeHeight = size.height - width / 2
 
-        //space
+        // space
         val space = size.height / 2.2f + width / 2
         val spacePos = scopeHeight * spacePosition
         val sy1 = spacePos - space / 2
         val sy2 = spacePos + space / 2
 
-        //line length
+        // line length
         val lineHeight = scopeHeight - space
 
-        //line1
+        // line1
         val line1y1 = max(0f, sy1 - lineHeight)
         val line1y2 = max(line1y1, sy1)
 
-        //line2
+        // line2
         val line2y1 = min(sy2, scopeHeight)
         val line2y2 = min(line2y1 + lineHeight, scopeHeight)
 
-        //draw
+        // draw
         drawLine(
             Color.Black,
             Offset(x, line1y1),
@@ -99,10 +113,8 @@ private fun Raindrop(modifier: Modifier = Modifier, spacePosition: Float = 0f) {
             ),
             cap = StrokeCap.Round
         )
-
     }
 }
-
 
 @Composable
 fun AnimatableRains(modifier: Modifier = Modifier, lightRain: Boolean = false) {
@@ -116,51 +128,52 @@ fun Rains(
     lightRain: Boolean = false,
 ) {
 
-    Layout(modifier = modifier.rotate(30f), content = {
+    Layout(
+        modifier = modifier.rotate(30f),
+        content = {
 
-        if (animate) {
-            AnimatableRaindrop(
-                modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(),
-                500
-            )
-            AnimatableRaindrop(
-                modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(),
-                600
-            )
-            if (!lightRain) {
+            if (animate) {
+                AnimatableRaindrop(
+                    modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight(),
+                    500
+                )
                 AnimatableRaindrop(
                     modifier
                         .fillMaxWidth()
                         .fillMaxHeight(),
                     600
                 )
-            }
-
-        } else {
-            Raindrop(
-                modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-            )
-            Raindrop(
-                modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight(),
-            )
-            if (!lightRain) {
+                if (!lightRain) {
+                    AnimatableRaindrop(
+                        modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight(),
+                        600
+                    )
+                }
+            } else {
+                Raindrop(
+                    modifier
+                        .fillMaxWidth()
+                        .fillMaxHeight()
+                )
                 Raindrop(
                     modifier
                         .fillMaxWidth()
                         .fillMaxHeight(),
                 )
+                if (!lightRain) {
+                    Raindrop(
+                        modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight(),
+                    )
+                }
             }
         }
-
-    }) { measurables, constraints ->
+    ) { measurables, constraints ->
         // Don't constrain child views further, measure them with given constraints
         // List of measured children
         val placeables = measurables.mapIndexed { index, measurable ->
@@ -176,7 +189,7 @@ fun Rains(
                 constraints.copy(
                     minWidth = 0,
                     minHeight = 0,
-                    maxWidth = constraints.maxWidth / 10, //raindrop width
+                    maxWidth = constraints.maxWidth / 10, // raindrop width
                     maxHeight = height.toInt(),
                 )
             )
@@ -197,8 +210,6 @@ fun Rains(
             }
         }
     }
-
-
 }
 
 @Preview
@@ -221,6 +232,5 @@ fun PreviewRains() {
             Spacer(Modifier.height(5.dp))
             AnimatableRains(modifier = Modifier.size(150.dp), lightRain = true)
         }
-
     }
 }

@@ -1,3 +1,18 @@
+/*
+ * Copyright 2021 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.github.cuteweather.ui.weathericon
 
 import androidx.compose.animation.core.RepeatMode
@@ -37,7 +52,7 @@ fun AnimatableSun(modifier: Modifier = Modifier) {
         val stroke = size.width / 20
         val centerOffset = Offset(size.width / 30, size.width / 30)
 
-        //draw circle
+        // draw circle
         drawCircle(
             color = Color.Black,
             radius = radius + stroke / 2,
@@ -51,7 +66,7 @@ fun AnimatableSun(modifier: Modifier = Modifier) {
             center = center + centerOffset
         )
 
-        //draw line
+        // draw line
 
         val lineLength = radius * 0.6f
         val lineOffset = radius * 1.8f
@@ -76,12 +91,8 @@ fun AnimatableSun(modifier: Modifier = Modifier) {
                 cap = StrokeCap.Round
             )
         }
-
-
     }
-
 }
-
 
 @Composable
 fun Sun(modifier: Modifier = Modifier) {
@@ -91,7 +102,7 @@ fun Sun(modifier: Modifier = Modifier) {
         val radius = size.width / 6
         val stroke = size.width / 20
 
-        //draw circle
+        // draw circle
         drawCircle(
             color = Color.Black,
             radius = radius + stroke / 2,
@@ -103,7 +114,7 @@ fun Sun(modifier: Modifier = Modifier) {
             style = Fill,
         )
 
-        //draw line
+        // draw line
 
         val lineLength = radius * 0.2f
         val lineOffset = radius * 1.8f
@@ -128,16 +139,11 @@ fun Sun(modifier: Modifier = Modifier) {
                 cap = StrokeCap.Round
             )
         }
-
     }
-
 }
-
-
 
 @Preview
 @Composable
 fun PreviewAnimatableSun() {
     AnimatableSun(Modifier.size(100.dp))
 }
-

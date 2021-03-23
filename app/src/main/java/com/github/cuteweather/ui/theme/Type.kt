@@ -43,7 +43,6 @@ val typography = Typography(
     */
 )
 
-
 object FontType {
     val fontFamily = FontFamily.Default
     val typeface = Typeface.SANS_SERIF

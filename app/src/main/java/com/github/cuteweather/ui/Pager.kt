@@ -13,11 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 @file:Suppress("unused")
 
-
-//copy from jetcaster
+// copy from jetcaster
 package com.github.cuteweather.ui
 
 import androidx.compose.animation.core.Animatable
@@ -114,7 +112,7 @@ class PagerState(
     }
 
     override fun toString(): String = "PagerState{minPage=$minPage, maxPage=$maxPage, " +
-            "currentPage=$currentPage, currentPageOffset=$currentPageOffset}"
+        "currentPage=$currentPage, currentPageOffset=$currentPageOffset}"
 }
 
 @Immutable

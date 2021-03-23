@@ -1,3 +1,18 @@
+/*
+ * Copyright 2021 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.github.cuteweather.ui
 
 import androidx.compose.animation.core.animateFloatAsState
@@ -28,7 +43,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.github.cuteweather.data.TemperatureUnit
 
-
 @Composable
 fun ShowDialog(selected: TemperatureUnit, onSelect: (TemperatureUnit) -> Unit) {
     AlertDialog(
@@ -51,20 +65,21 @@ private fun DialogContent(
 
     Box(modifier) {
 
-
         var animationTrigger by remember {
             mutableStateOf(
                 if (selected == TemperatureUnit.Fahrenheit) 0f else 1f
             )
         }
-        val animateFloat by animateFloatAsState(targetValue = animationTrigger, finishedListener = {
-            if (it == 0f && selected != TemperatureUnit.Fahrenheit) {
-                onSelect(TemperatureUnit.Fahrenheit)
-            } else if (it == 1f && selected != TemperatureUnit.Centigrade) {
-                onSelect(TemperatureUnit.Centigrade)
+        val animateFloat by animateFloatAsState(
+            targetValue = animationTrigger,
+            finishedListener = {
+                if (it == 0f && selected != TemperatureUnit.Fahrenheit) {
+                    onSelect(TemperatureUnit.Fahrenheit)
+                } else if (it == 1f && selected != TemperatureUnit.Centigrade) {
+                    onSelect(TemperatureUnit.Centigrade)
+                }
             }
-        })
-
+        )
 
         Row(
             Modifier
@@ -93,7 +108,8 @@ private fun DialogContent(
                 Modifier
                     .weight(1f)
                     .align(Alignment.CenterVertically)
-                    .clickable { animationTrigger = 1f }) {
+                    .clickable { animationTrigger = 1f }
+            ) {
                 Text(
                     text = TemperatureUnit.Centigrade.text,
                     modifier = Modifier
@@ -119,7 +135,6 @@ private fun DialogContent(
             val x2 = size.width - x1
             val y1 = size.height * 0.25f
             val y2 = size.height - y1
-
 
             drawLine(Color.Black, Offset(x1, y1), Offset(x2, y1), strokeWidth = strokeWidth)
 
@@ -152,13 +167,9 @@ private fun DialogContent(
                 center = Offset(x1 + (x2 - x1) * animateFloat, size.height * 0.5f),
                 radius = radius
             )
-
         }
     }
-
-
 }
-
 
 @Preview
 @Composable

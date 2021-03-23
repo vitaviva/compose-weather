@@ -1,3 +1,18 @@
+/*
+ * Copyright 2021 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.github.cuteweather
 
 import android.graphics.LinearGradient
@@ -83,14 +98,13 @@ import com.github.cuteweather.ui.ShowDialog
 import com.github.cuteweather.ui.theme.FontType
 import kotlin.math.abs
 
-
 @Preview
 @Composable
 fun WeatherView() {
 
     val (tempUnit, setTempUnit) = remember { mutableStateOf(TemperatureUnit.Fahrenheit) } // F or C
 
-    val pagerState = remember { PagerState() }// state used for pager
+    val pagerState = remember { PagerState() } // state used for pager
 
     var selectedIndex by remember { mutableStateOf(0) } // selected index of paager
 
@@ -105,7 +119,7 @@ fun WeatherView() {
         onDispose { }
     }
     DisposableEffect(pagerState.selectionState) {
-        //whenever pager changed，get newest index
+        // whenever pager changed，get newest index
         selectedIndex = pagerState.currentPage
         onDispose { }
     }
@@ -166,13 +180,9 @@ fun WeatherView() {
             }
 
             ActionBar(tempUnit, setTempUnit)
-
         }
     }
-
-
 }
-
 
 /**
  * Pager showing weather info
@@ -195,19 +205,21 @@ fun WeatherInfoPager(
             Text(
                 day.dayOfMonth,
                 style = TextStyle(
-                    fontSize = 20.sp,
+                    fontSize = 18.sp,
                     fontFamily = FontType.fontFamily,
                     fontWeight = FontWeight.Normal,
                     textAlign = TextAlign.Center,
-                ), modifier = Modifier.align(Alignment.CenterHorizontally)
+                ),
+                modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             Text(
                 day.weather.text,
                 style = TextStyle(
-                    fontSize = 20.sp,
+                    fontSize = 18.sp,
                     fontFamily = FontType.fontFamily,
                     fontWeight = FontWeight.Normal,
-                ), modifier = Modifier.align(Alignment.CenterHorizontally)
+                ),
+                modifier = Modifier.align(Alignment.CenterHorizontally)
             )
 
             Spacer(modifier = Modifier.height(10.dp))
@@ -224,8 +236,9 @@ fun WeatherInfoPager(
                         style = TextStyle(
                             fontSize = 19.sp,
                             fontFamily = FontType.fontFamily,
-                            fontWeight = FontWeight.SemiBold,
-                        ), modifier = Modifier.align(Alignment.End)
+                            fontWeight = FontWeight.Normal,
+                        ),
+                        modifier = Modifier.align(Alignment.End)
                     )
                     Spacer(modifier = Modifier.height(3.dp))
                     Text(
@@ -233,11 +246,11 @@ fun WeatherInfoPager(
                         style = TextStyle(
                             fontSize = 19.sp,
                             fontFamily = FontType.fontFamily,
-                            fontWeight = FontWeight.SemiBold,
-                        ), modifier = Modifier.align(Alignment.End)
+                            fontWeight = FontWeight.Normal,
+                        ),
+                        modifier = Modifier.align(Alignment.End)
                     )
                 }
-
 
                 val animateTween by rememberInfiniteTransition().animateFloat(
                     initialValue = -1f,
@@ -264,14 +277,11 @@ fun WeatherInfoPager(
                         fontSize = 30.sp,
                         fontFamily = FontType.fontFamily,
                         fontWeight = FontWeight.SemiBold
-                    ), modifier = Modifier.padding(top = 10.dp)
+                    ),
+                    modifier = Modifier.padding(top = 10.dp)
                 )
             }
-
-
         }
-
-
     }
 }
 
@@ -318,21 +328,22 @@ fun DailyWeatherChart(
 
             drawIntoCanvas { canvas ->
 
-                //draw path
-                canvas.drawPath(path, androidx.compose.ui.graphics.Paint().apply {
-                    style = PaintingStyle.Stroke
-                    strokeWidth = 1.dp.toPx()
-                    pathEffect = PathEffect.cornerPathEffect(50f)
-                })
+                // draw path
+                canvas.drawPath(
+                    path,
+                    androidx.compose.ui.graphics.Paint().apply {
+                        style = PaintingStyle.Stroke
+                        strokeWidth = 1.dp.toPx()
+                        pathEffect = PathEffect.cornerPathEffect(50f)
+                    }
+                )
 
-
-                //draw text
+                // draw text
                 val size = 10.sp.toPx()
                 val textPaint = Paint().apply {
                     color = Color.Black.toArgb()
                     textSize = size
                     typeface = FontType.typeface
-
                 }
                 dailyWeathers.asSequence().zip(points.asSequence())
                     .forEachIndexed { index, pair ->
@@ -347,7 +358,7 @@ fun DailyWeatherChart(
 //                            style = Stroke(width = 1.dp.toPx())
 //                        )
 
-                        //draw points
+                        // draw points
                         drawCircle(
                             Color.Black,
                             1.5.dp.toPx(),
@@ -364,7 +375,6 @@ fun DailyWeatherChart(
             }
         }
 
-
         Row(
             modifier = Modifier
                 .height(170.dp)
@@ -378,7 +388,8 @@ fun DailyWeatherChart(
                         .fillMaxHeight()
                         .clickable {
                             onSelect(it)
-                        }) {
+                        }
+                ) {
                     Column(
                         Modifier.align(Alignment.TopCenter)
                     ) {
@@ -405,10 +416,8 @@ fun DailyWeatherChart(
                                 dailyWeathers[it].weather.icon()
                             }
                         }
-
                     }
                 }
-
 
                 if (it < 6)
                     Divider(
@@ -418,16 +427,10 @@ fun DailyWeatherChart(
                             .padding(top = 20.dp)
                             .align(Alignment.Top)
                     )
-
             }
-
         }
-
-
     }
-
 }
-
 
 /**
  * Hourly weather chart
@@ -474,18 +477,13 @@ fun HourlyWeatherChart(
                             )
                         }
                     }
-
                 }
 
                 LineChart(Modifier.fillMaxSize(), dailyWeather)
-
             }
-
         }
-
     }
 }
-
 
 /**
  * Render hourly temperature with curve-line chart
@@ -534,8 +532,8 @@ fun LineChart(
             val points = dailyWeather.hourly.mapIndexed { index, hourlyWeather ->
                 Offset(
                     increment * index + increment / 2,
-                    (1 - (hourlyWeather.temperature - min) / dy) * (size.height * 0.3f)
-                            + size.height * 0.2f //reserve space for drawText
+                    (1 - (hourlyWeather.temperature - min) / dy) * (size.height * 0.3f) +
+                        size.height * 0.2f // reserve space for drawText
                 )
             }
 
@@ -559,7 +557,6 @@ fun LineChart(
                     p3 = Offset(cx, endP.y - dy)
                 }
                 path.cubicTo(p2.x, p2.y, p3.x, p3.y, endP.x, endP.y)
-
             }
 
             path.lineTo(points.last().x + increment / 2, points.last().y)
@@ -567,36 +564,41 @@ fun LineChart(
             path.lineTo(0f, size.height)
             path.lineTo(0f, points.first().y)
 
-            //draw path
-            canvas.nativeCanvas.drawPath(path, Paint().apply {
-                val linearGradient = LinearGradient(
-                    0f, 0f,
-                    0f, 200f,
-                    Color.Black.copy(alpha = 0.1f).toArgb(),
-                    Color.Transparent.toArgb(),
-                    Shader.TileMode.CLAMP
-                )
+            // draw path
+            canvas.nativeCanvas.drawPath(
+                path,
+                Paint().apply {
+                    val linearGradient = LinearGradient(
+                        0f, 0f,
+                        0f, 200f,
+                        Color.Black.copy(alpha = 0.1f).toArgb(),
+                        Color.Transparent.toArgb(),
+                        Shader.TileMode.CLAMP
+                    )
 
-                shader = linearGradient
-                style = Paint.Style.FILL
-                isAntiAlias = true
-            })
+                    shader = linearGradient
+                    style = Paint.Style.FILL
+                    isAntiAlias = true
+                }
+            )
 
-            //draw points
-            canvas.drawPoints(PointMode.Points, points, androidx.compose.ui.graphics.Paint().apply {
-                strokeWidth = 8f
-                strokeCap = StrokeCap.Round
-                color = Color.Black.copy(0.6f)
-            })
+            // draw points
+            canvas.drawPoints(
+                PointMode.Points, points,
+                androidx.compose.ui.graphics.Paint().apply {
+                    strokeWidth = 8f
+                    strokeCap = StrokeCap.Round
+                    color = Color.Black.copy(0.6f)
+                }
+            )
 
-            //draw text
+            // draw text
             val size = 10.sp.toPx()
             val textPaint = Paint().apply {
                 color = Color.Black.toArgb()
                 textSize = size
                 alpha = 90
                 typeface = FontType.typeface
-
             }
             dailyWeather.hourly.asSequence().zip(points.asSequence())
                 .forEachIndexed { index, pair ->
@@ -608,13 +610,9 @@ fun LineChart(
                         textPaint
                     )
                 }
-
-
         }
     }
-
 }
-
 
 @Composable
 fun WeatherIcon(modifier: Modifier, weatherIcon: Weather) {
@@ -635,7 +633,6 @@ fun WeatherIcon(modifier: Modifier, weatherIcon: Weather) {
         trigger = 0f
     }
 
-
     val composeInfo = remember(animateFloat) {
         cur.composedIcon + (weatherIcon.composedIcon - cur.composedIcon) * animateFloat
     }
@@ -653,7 +650,6 @@ private fun backgroundColorState(target: Color) =
         animationSpec = spring(stiffness = Spring.StiffnessLow)
     )
 
-
 /**
  * transparent ActionBar with more-opt menu
  */
@@ -664,7 +660,7 @@ fun ActionBar(selected: TemperatureUnit, onSelect: (TemperatureUnit) -> Unit) {
             .height(100.dp)
             .fillMaxWidth()
             .background(
-                //TODO: auto hide
+                // TODO: auto hide
                 Brush.verticalGradient(
                     listOf(Color.Black.copy(alpha = 0.4f), Color.Transparent)
                 )
@@ -692,6 +688,5 @@ fun ActionBar(selected: TemperatureUnit, onSelect: (TemperatureUnit) -> Unit) {
                 .align(Alignment.TopEnd),
             colorFilter = ColorFilter.tint(Color.White)
         )
-
     }
 }

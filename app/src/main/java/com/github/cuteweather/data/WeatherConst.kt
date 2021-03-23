@@ -1,3 +1,18 @@
+/*
+ * Copyright 2021 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package com.github.cuteweather.data
 
 import androidx.compose.foundation.layout.Box
@@ -46,7 +61,6 @@ import com.github.cuteweather.ui.weathericon.Cloud
 import com.github.cuteweather.ui.weathericon.Rains
 import com.github.cuteweather.ui.weathericon.Sun
 
-
 enum class Weather(
     val text: String = "",
     val composedIcon: ComposeInfo,
@@ -78,7 +92,6 @@ enum class Weather(
         HeavyRainComposed, HeavyRainIcon, HeavyRainAnimatableIcon, RainBg
     )
 }
-
 
 /**
  * background color for each type of weather
@@ -116,7 +129,6 @@ object WeatherBackground {
         teal900,
         teal500
     )
-
 }
 
 /**
@@ -126,15 +138,15 @@ object WeatherComposedInfo {
 
     val SunnyComposed = ComposeInfo(
         sun = IconInfo(200.dp, 0.dp to 0.dp),
-        cloud = IconInfo(200.dp, (-20).dp to 0.dp, 0f),
-        lightCloud = IconInfo(100.dp, (-20).dp to 70.dp, 0f),
+        cloud = IconInfo(200.dp, (-40).dp to 0.dp, 0f),
+        lightCloud = IconInfo(100.dp, (-30).dp to 70.dp, 0f),
         rains = IconInfo(80.dp, 45.dp to 60.dp, 0f),
         lightRain = IconInfo(80.dp, 45.dp to 60.dp, 0f),
     )
 
     val MostlyClearComposed = ComposeInfo(
         sun = IconInfo(170.dp, 20.dp to 0.dp),
-        cloud = IconInfo(200.dp, (-20).dp to 0.dp, 0f),
+        cloud = IconInfo(200.dp, (-40).dp to 0.dp, 0f),
         lightCloud = IconInfo(80.dp, 35.dp to 75.dp, 1f),
         rains = IconInfo(80.dp, 45.dp to 60.dp, 0f),
         lightRain = IconInfo(80.dp, 45.dp to 60.dp, 0f),
@@ -151,7 +163,7 @@ object WeatherComposedInfo {
     val CloudyRainComposed = ComposeInfo(
         sun = IconInfo(120.dp, 80.dp to 0.dp),
         cloud = IconInfo(200.dp, 0.dp to 0.dp),
-        lightCloud = IconInfo(100.dp, 0.dp to 0.dp, 0f),
+        lightCloud = IconInfo(100.dp, -(30).dp to 25.dp, 0f),
         rains = IconInfo(80.dp, 45.dp to 60.dp, 0f),
         lightRain = IconInfo(80.dp, 45.dp to 60.dp, 1f),
     )
@@ -164,7 +176,6 @@ object WeatherComposedInfo {
         lightRain = IconInfo(80.dp, 45.dp to 60.dp, 0f),
     )
 }
-
 
 /**
  * used in chart or navigation bar
@@ -189,14 +200,12 @@ object WeatherIcon {
         }
     }
 
-
     val CloudyIcon = @Composable {
         Cloud(
             Modifier
                 .size(40.dp)
                 .padding(3.dp)
         )
-
     }
 
     val RainIcon = @Composable {
@@ -204,7 +213,8 @@ object WeatherIcon {
             Rains(
                 Modifier
                     .size(25.dp)
-                    .offset(5.dp, 8.dp), lightRain = true
+                    .offset(5.dp, 8.dp),
+                lightRain = true
             )
             Cloud(
                 Modifier
@@ -229,7 +239,6 @@ object WeatherIcon {
         }
     }
 }
-
 
 /**
  * used in navigation bar for selected item
@@ -259,7 +268,6 @@ object WeatherAnimatableIcon {
                     .offset(8.dp, 18.dp)
             )
         }
-
     }
 
     val CloudyAnimatableIcon = @Composable {
@@ -269,7 +277,6 @@ object WeatherAnimatableIcon {
                 .padding(3.dp),
             800
         )
-
     }
 
     val RainAnimatableIcon = @Composable {
@@ -277,7 +284,8 @@ object WeatherAnimatableIcon {
             AnimatableRains(
                 Modifier
                     .size(25.dp)
-                    .offset(5.dp, 8.dp), true
+                    .offset(5.dp, 8.dp),
+                true
             )
             Cloud(
                 Modifier
@@ -286,7 +294,6 @@ object WeatherAnimatableIcon {
             )
         }
     }
-
 
     val HeavyRainAnimatableIcon = @Composable {
         Box(Modifier.size(40.dp)) {
@@ -303,7 +310,6 @@ object WeatherAnimatableIcon {
         }
     }
 }
-
 
 @Preview
 @Composable
@@ -323,7 +329,6 @@ fun PreviewMostlyClearIcon() {
     }
 }
 
-
 @Preview
 @Composable
 fun PreviewCloudyIcon() {
@@ -332,7 +337,6 @@ fun PreviewCloudyIcon() {
         CloudyAnimatableIcon()
     }
 }
-
 
 @Preview
 @Composable
@@ -352,13 +356,11 @@ fun PreviewHeavyRainIcon() {
     }
 }
 
-
 @Preview
 @Composable
 fun PreviewCloudyRain() {
     ComposedIcon(composeInfo = CloudyRainComposed)
 }
-
 
 @Preview
 @Composable
@@ -366,13 +368,11 @@ fun PreviewHeavyRain() {
     ComposedIcon(composeInfo = HeavyRainComposed)
 }
 
-
 @Preview
 @Composable
 fun PreviewSunny() {
     ComposedIcon(composeInfo = SunnyComposed)
 }
-
 
 @Preview
 @Composable
@@ -380,10 +380,8 @@ fun PreviewCloudy() {
     ComposedIcon(composeInfo = CloudyComposed)
 }
 
-
 @Preview
 @Composable
 fun PreviewMostlyClear() {
     ComposedIcon(composeInfo = MostlyClearComposed)
 }
-
