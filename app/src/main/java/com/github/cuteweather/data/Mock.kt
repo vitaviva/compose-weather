@@ -209,22 +209,25 @@ private val hourlyWeather = listOf(
 )
 
 object WeatherDataProvider {
-    @RequiresApi(Build.VERSION_CODES.O)
     val dailyWeather =
         (0..6).map {
-            DailyWeather(
-                curDate.plusDays(it.toLong()),
-                hourlyWeather[it],
-                when (it) {
-                    0 -> Weather.Sunny
-                    1 -> Weather.MostlyClear
-                    2 -> Weather.Cloudy
-                    3 -> Weather.CloudyRain
-                    4 -> Weather.HeavyRain
-                    5 -> Weather.Cloudy
-                    else -> Weather.Sunny
-                }
-            )
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                DailyWeather(
+                    curDate.plusDays(it.toLong()),
+                    hourlyWeather[it],
+                    when (it) {
+                        0 -> Weather.Sunny
+                        1 -> Weather.MostlyClear
+                        2 -> Weather.Cloudy
+                        3 -> Weather.CloudyRain
+                        4 -> Weather.HeavyRain
+                        5 -> Weather.Cloudy
+                        else -> Weather.Sunny
+                    }
+                )
+            } else {
+                //Min Sdk 26
+            }
         }.toList()
 }
 
