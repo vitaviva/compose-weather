@@ -127,7 +127,7 @@ private val hourlyWeather = listOf(
         HourlyWeather(10, Weather.Cloudy),
         HourlyWeather(9, Weather.Cloudy),
 
-    ),
+        ),
     listOf(
         HourlyWeather(8, Weather.Cloudy),
         HourlyWeather(9, Weather.Cloudy),
@@ -227,6 +227,7 @@ object WeatherDataProvider {
                 )
             } else {
                 //Min Sdk 26
+                DailyWeather(curDate, hourlyWeather[0], Weather.CloudyRain)
             }
         }.toList()
 }

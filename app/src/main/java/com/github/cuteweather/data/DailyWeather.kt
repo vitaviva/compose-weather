@@ -71,4 +71,4 @@ val DailyWeather.averageTemperature
     get() = hourly.sumBy { it.temperature } / hourly.size
 
 
-val MinSdkWarning = "Min sdk version is 26"
+private val MinSdkWarning = "Min sdk version is 26"
