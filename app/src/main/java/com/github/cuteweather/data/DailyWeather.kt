@@ -58,17 +58,18 @@ val DailyWeather.dayOfWeek
     }
 
 val DailyWeather.curHourlyWeather
-    get() = hourly[if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        LocalTime.now().hour / 2
-    } else {
-        0
-    }]
+    get() = hourly[
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            LocalTime.now().hour / 2
+        } else {
+            0
+        }
+    ]
 
 val DailyWeather.temperatureRange
     get() = hourly.maxOf { it.temperature } to hourly.minOf { it.temperature }
 
 val DailyWeather.averageTemperature
     get() = hourly.sumBy { it.temperature } / hourly.size
-
 
 private val MinSdkWarning = "Min sdk version is 26"
