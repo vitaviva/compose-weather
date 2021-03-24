@@ -16,8 +16,9 @@
 package com.github.cuteweather.data
 
 import android.os.Build
-import androidx.annotation.RequiresApi
 import java.time.LocalDate
+import java.time.format.TextStyle
+import java.util.Locale
 
 /**
  * note：temperature data use "℃" as default
@@ -210,10 +211,18 @@ private val hourlyWeather = listOf(
 
 object WeatherDataProvider {
     val dailyWeather =
-        (0..6).map {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            val curDate: LocalDate = LocalDate.now()
+            (0..6).map {
+                val date = curDate.plusDays(it.toLong())
                 DailyWeather(
-                    curDate.plusDays(it.toLong()),
+                    dayOfWeek = date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.US),
+                    dayOfMonth = "${date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.US)}, ${
+                    date.month.getDisplayName(
+                        TextStyle.SHORT,
+                        Locale.US
+                    )
+                    } ${date.dayOfMonth}",
                     hourlyWeather[it],
                     when (it) {
                         0 -> Weather.Sunny
@@ -225,11 +234,21 @@ object WeatherDataProvider {
                         else -> Weather.Sunny
                     }
                 )
-            } else {
-                DailyWeather(null, hourlyWeather[0], Weather.CloudyRain)
-            }
+            }.toList()
+        } else (0..6).map {
+            (
+                DailyWeather(
+                    hourly = hourlyWeather[it],
+                    weather = when (it) {
+                        0 -> Weather.Sunny
+                        1 -> Weather.MostlyClear
+                        2 -> Weather.Cloudy
+                        3 -> Weather.CloudyRain
+                        4 -> Weather.HeavyRain
+                        5 -> Weather.Cloudy
+                        else -> Weather.Sunny
+                    }
+                )
+                )
         }.toList()
 }
-
-@RequiresApi(Build.VERSION_CODES.O)
-private val curDate: LocalDate = LocalDate.now()

@@ -87,8 +87,6 @@ import com.github.cuteweather.data.Weather
 import com.github.cuteweather.data.WeatherDataProvider
 import com.github.cuteweather.data.averageTemperature
 import com.github.cuteweather.data.curHourlyWeather
-import com.github.cuteweather.data.dayOfMonth
-import com.github.cuteweather.data.dayOfWeek
 import com.github.cuteweather.data.displayName
 import com.github.cuteweather.data.temperatureRange
 import com.github.cuteweather.ui.ComposedIcon

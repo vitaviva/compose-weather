@@ -16,14 +16,12 @@
 package com.github.cuteweather.data
 
 import android.os.Build
-import java.time.LocalDate
 import java.time.LocalTime
-import java.time.format.TextStyle
-import java.util.Locale
 import kotlin.math.roundToInt
 
 data class DailyWeather(
-    val date: LocalDate? = null,
+    val dayOfWeek: String = MinSdkWarning,
+    val dayOfMonth: String = MinSdkWarning,
     val hourly: List<HourlyWeather>,
     val weather: Weather
 )
@@ -38,33 +36,12 @@ fun Int.displayName(temperatureUnit: TemperatureUnit) =
     if (temperatureUnit == TemperatureUnit.Centigrade) this.toString()
     else (this * 1.8f + 32).roundToInt().toString()
 
-val DailyWeather.dayOfMonth
-    get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        "${requireNotNull(date).dayOfWeek.getDisplayName(TextStyle.FULL, Locale.US)}, ${
-        date.month.getDisplayName(
-            TextStyle.SHORT,
-            Locale.US
-        )
-        } ${date.dayOfMonth}"
-    } else {
-        MinSdkWarning
-    }
-
-val DailyWeather.dayOfWeek
-    get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        requireNotNull(date).dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.US)
-    } else {
-        MinSdkWarning
-    }
-
 val DailyWeather.curHourlyWeather
-    get() = hourly[
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            LocalTime.now().hour / 2
-        } else {
-            0
-        }
-    ]
+    get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        hourly[LocalTime.now().hour / 2]
+    } else {
+        hourly[0]
+    }
 
 val DailyWeather.temperatureRange
     get() = hourly.maxOf { it.temperature } to hourly.minOf { it.temperature }
@@ -72,4 +49,4 @@ val DailyWeather.temperatureRange
 val DailyWeather.averageTemperature
     get() = hourly.sumBy { it.temperature } / hourly.size
 
-private val MinSdkWarning = "Min sdk version is 26"
+private const val MinSdkWarning = "Min sdk version is 26"
