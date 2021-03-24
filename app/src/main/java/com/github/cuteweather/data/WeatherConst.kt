@@ -15,7 +15,9 @@
  */
 package com.github.cuteweather.data
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -311,77 +313,80 @@ object WeatherAnimatableIcon {
     }
 }
 
-@Preview
+@Preview(heightDp = 200)
 @Composable
-fun PreviewSunnyIcon() {
-    Row {
-        SunnyIcon()
-        SunnyAnimatableIcon()
+fun PreviewIcon() {
+    Column {
+        Row(Modifier.weight(1f)) {
+            SunnyIcon()
+            SunnyAnimatableIcon()
+        }
+        Row(Modifier.weight(1f)) {
+            MostlyClearIcon()
+            MostlyClearAnimatableIcon()
+        }
+        Row(Modifier.weight(1f)) {
+            CloudyIcon()
+            CloudyAnimatableIcon()
+        }
+        Row(Modifier.weight(1f)) {
+            RainIcon()
+            RainAnimatableIcon()
+        }
+        Row(Modifier.weight(1f)) {
+            HeavyRainIcon()
+            HeavyRainAnimatableIcon()
+        }
     }
 }
 
-@Preview
+@Preview(widthDp = 740, heightDp = 480)
 @Composable
-fun PreviewMostlyClearIcon() {
-    Row {
-        MostlyClearIcon()
-        MostlyClearAnimatableIcon()
+fun PreviewComposedIcon() {
+    Column(
+        Modifier
+            .background(Color.White)
+            .padding(10.dp)
+    ) {
+
+        Row(Modifier.align(Alignment.CenterHorizontally)) {
+            ComposedIcon(
+                Modifier
+                    .padding(5.dp)
+                    .background(teal700)
+                    .padding(10.dp),
+                composeInfo = SunnyComposed
+            )
+            ComposedIcon(
+                Modifier
+                    .padding(5.dp)
+                    .background(teal700)
+                    .padding(10.dp),
+                composeInfo = CloudyComposed
+            )
+            ComposedIcon(
+                Modifier
+                    .padding(5.dp)
+                    .background(teal700)
+                    .padding(10.dp),
+                composeInfo = CloudyRainComposed
+            )
+        }
+        Row(Modifier.align(Alignment.CenterHorizontally)) {
+            ComposedIcon(
+                Modifier
+                    .padding(5.dp)
+                    .background(teal700)
+                    .padding(10.dp),
+                composeInfo = HeavyRainComposed
+            )
+            ComposedIcon(
+                Modifier
+                    .padding(5.dp)
+                    .background(teal700)
+                    .padding(10.dp),
+                composeInfo = MostlyClearComposed
+            )
+        }
     }
-}
-
-@Preview
-@Composable
-fun PreviewCloudyIcon() {
-    Row {
-        CloudyIcon()
-        CloudyAnimatableIcon()
-    }
-}
-
-@Preview
-@Composable
-fun PreviewRainIcon() {
-    Row {
-        RainIcon()
-        RainAnimatableIcon()
-    }
-}
-
-@Preview
-@Composable
-fun PreviewHeavyRainIcon() {
-    Row {
-        HeavyRainIcon()
-        HeavyRainAnimatableIcon()
-    }
-}
-
-@Preview
-@Composable
-fun PreviewCloudyRain() {
-    ComposedIcon(composeInfo = CloudyRainComposed)
-}
-
-@Preview
-@Composable
-fun PreviewHeavyRain() {
-    ComposedIcon(composeInfo = HeavyRainComposed)
-}
-
-@Preview
-@Composable
-fun PreviewSunny() {
-    ComposedIcon(composeInfo = SunnyComposed)
-}
-
-@Preview
-@Composable
-fun PreviewCloudy() {
-    ComposedIcon(composeInfo = CloudyComposed)
-}
-
-@Preview
-@Composable
-fun PreviewMostlyClear() {
-    ComposedIcon(composeInfo = MostlyClearComposed)
 }

@@ -28,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.github.cuteweather.R
@@ -55,7 +56,7 @@ fun Cloud(modifier: Modifier = Modifier) {
     Image(
         imageVector = ImageVector.vectorResource(id = R.drawable.ic_cloud),
         contentDescription = "",
-        modifier = modifier
+        modifier = modifier.clearAndSetSemantics { }
     )
 }
 

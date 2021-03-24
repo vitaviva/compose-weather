@@ -20,9 +20,12 @@ import java.time.LocalTime
 import kotlin.math.roundToInt
 
 data class DailyWeather(
+    val isToday: Boolean = false,
     val dayOfWeek: String = MinSdkWarning,
+    val dayOfWeekFull: String = MinSdkWarning,
     val dayOfMonth: String = MinSdkWarning,
     val hourly: List<HourlyWeather>,
+    @Deprecated("use weather()", replaceWith = ReplaceWith("weather()"))
     val weather: Weather
 )
 
@@ -36,11 +39,20 @@ fun Int.displayName(temperatureUnit: TemperatureUnit) =
     if (temperatureUnit == TemperatureUnit.Centigrade) this.toString()
     else (this * 1.8f + 32).roundToInt().toString()
 
-val DailyWeather.curHourlyWeather
-    get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        hourly[LocalTime.now().hour / 2]
+fun DailyWeather.weather() =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (isToday) hourly[LocalTime.now().hour / 2].weather
+        else weather
     } else {
-        hourly[0]
+        hourly[0].weather
+    }
+
+fun DailyWeather.temperature() =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        if (isToday) hourly[LocalTime.now().hour / 2].temperature
+        else averageTemperature
+    } else {
+        0
     }
 
 val DailyWeather.temperatureRange

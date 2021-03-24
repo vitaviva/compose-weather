@@ -11,13 +11,17 @@ CuteWeather is a beautiful weather app build in Jetpack Compose
 ## :scroll: Description
 <!--- Describe your app in one or two sentences -->
 
-<img src="app/src/main/res/drawable/ic_launcher.png" width=120 align=left >
+<img src="app/src/main/res/drawable/ic_launcher.png" width=120 align=left hspace="10" vspace="10"  >
 
 - Display weather info with cute animation
 - Daily and hourly temperature trends
 - Switch between Fahrenheit and centigrade
+- Support Talkback of Android Accessibility
+
+<img src="/results/icons.gif" width="400">
 
 see more:  [Android Dev Challenge: Week #4: Weather app](https://android-developers.googleblog.com/2021/03/android-dev-challenge-4.html)
+
 
 ## :bulb: Motivation and Context
 <!--- Optionally point readers to interesting parts of your submission. -->

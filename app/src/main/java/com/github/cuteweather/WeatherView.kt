@@ -74,6 +74,10 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -86,9 +90,10 @@ import com.github.cuteweather.data.TemperatureUnit
 import com.github.cuteweather.data.Weather
 import com.github.cuteweather.data.WeatherDataProvider
 import com.github.cuteweather.data.averageTemperature
-import com.github.cuteweather.data.curHourlyWeather
 import com.github.cuteweather.data.displayName
+import com.github.cuteweather.data.temperature
 import com.github.cuteweather.data.temperatureRange
+import com.github.cuteweather.data.weather
 import com.github.cuteweather.ui.ComposedIcon
 import com.github.cuteweather.ui.Pager
 import com.github.cuteweather.ui.PagerState
@@ -108,8 +113,7 @@ fun WeatherView() {
 
     val (selectedDay, curWeather) = remember(selectedIndex) { // selectDay and current weather
         val day = WeatherDataProvider.dailyWeather[selectedIndex]
-        day to if (selectedIndex == 0) day.curHourlyWeather.weather
-        else day.weather
+        day to day.weather()
     }
 
     DisposableEffect(Unit) {
@@ -153,10 +157,21 @@ fun WeatherView() {
 
                 Spacer(modifier = Modifier.height(20.dp))
 
+                // for Accessibility
+                val accessibilityContent = stringResource(
+                    id = R.string.current_weather,
+                    WeatherDataProvider.dailyWeather[0].weather().text,
+                    WeatherDataProvider.dailyWeather[0].temperature()
+                        .displayName(LocalTemUnit.current)
+                )
+
                 WeatherInfoPager(
                     Modifier
                         .weight(1f)
-                        .align(Alignment.CenterHorizontally),
+                        .align(Alignment.CenterHorizontally)
+                        .semantics(true) {
+                            contentDescription = accessibilityContent
+                        },
                     pagerState = pagerState,
                     dailyWeathers = WeatherDataProvider.dailyWeather
                 )
@@ -211,7 +226,7 @@ fun WeatherInfoPager(
                 modifier = Modifier.align(Alignment.CenterHorizontally)
             )
             Text(
-                day.weather.text,
+                day.weather().text,
                 style = TextStyle(
                     fontSize = 18.sp,
                     fontFamily = FontType.fontFamily,
@@ -260,7 +275,7 @@ fun WeatherInfoPager(
                 )
 
                 Text(
-                    day.averageTemperature.displayName(LocalTemUnit.current),
+                    day.temperature().displayName(LocalTemUnit.current),
                     style = TextStyle(
                         fontSize = 70.sp,
                         fontFamily = FontType.fontFamily,
@@ -346,16 +361,6 @@ fun DailyWeatherChart(
                 dailyWeathers.asSequence().zip(points.asSequence())
                     .forEachIndexed { index, pair ->
                         val (weather, points) = pair
-//                        //draw round background
-//                        val radius = size * 0.9f
-//                        drawCircle(Color.White, radius, Offset(points.x + size / 4, points.y))
-//                        drawCircle(
-//                            Color.Black,
-//                            radius,
-//                            Offset(points.x + size / 6, points.y + size / 10),
-//                            style = Stroke(width = 1.dp.toPx())
-//                        )
-
                         // draw points
                         drawCircle(
                             Color.Black,
@@ -380,12 +385,22 @@ fun DailyWeatherChart(
         ) {
             (dailyWeathers.indices).forEach {
 
+                // for Accessibility
+                val accessibilityContent = stringResource(
+                    id = R.string.average_weather,
+                    dailyWeathers[it].dayOfWeekFull,
+                    dailyWeathers[it].weather(),
+                    dailyWeathers[it].temperature().displayName(LocalTemUnit.current)
+                )
                 Box(
                     Modifier
                         .weight(1f)
                         .fillMaxHeight()
                         .clickable {
                             onSelect(it)
+                        }
+                        .semantics(mergeDescendants = true) {
+                            contentDescription = accessibilityContent
                         }
                 ) {
                     Column(
@@ -409,9 +424,9 @@ fun DailyWeatherChart(
                                 .padding(5.dp)
                         ) {
                             if (it == selectedIndex) {
-                                dailyWeathers[it].weather.animatableIcon()
+                                dailyWeathers[it].weather().animatableIcon()
                             } else {
-                                dailyWeathers[it].weather.icon()
+                                dailyWeathers[it].weather().icon()
                             }
                         }
                     }
@@ -471,7 +486,9 @@ fun HourlyWeatherChart(
                                 else "${(index - 11)} PM",
                                 fontSize = 9.sp,
                                 fontWeight = FontWeight.Light,
-                                modifier = Modifier.align(Alignment.CenterHorizontally)
+                                modifier = Modifier
+                                    .align(Alignment.CenterHorizontally)
+                                    .clearAndSetSemantics { }
                             )
                         }
                     }
@@ -663,6 +680,7 @@ fun ActionBar(selected: TemperatureUnit, onSelect: (TemperatureUnit) -> Unit) {
                     listOf(Color.Black.copy(alpha = 0.4f), Color.Transparent)
                 )
             )
+            .clearAndSetSemantics { }
     ) {
         var showDialogState by remember { mutableStateOf(false) }
 
@@ -675,13 +693,11 @@ fun ActionBar(selected: TemperatureUnit, onSelect: (TemperatureUnit) -> Unit) {
 
         Image(
             Icons.Default.MoreVert,
-            "More operations",
+            "",
             Modifier
                 .size(50.dp)
                 .offset((-2).dp, 30.dp)
-                .clickable {
-                    showDialogState = true
-                }
+                .clickable { showDialogState = true }
                 .padding(10.dp)
                 .align(Alignment.TopEnd),
             colorFilter = ColorFilter.tint(Color.White)

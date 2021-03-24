@@ -216,7 +216,9 @@ object WeatherDataProvider {
             (0..6).map {
                 val date = curDate.plusDays(it.toLong())
                 DailyWeather(
+                    isToday = it == 0,
                     dayOfWeek = date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.US),
+                    dayOfWeekFull = date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.US),
                     dayOfMonth = "${date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.US)}, ${
                     date.month.getDisplayName(
                         TextStyle.SHORT,
