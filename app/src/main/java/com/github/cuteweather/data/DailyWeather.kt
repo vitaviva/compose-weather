@@ -23,7 +23,7 @@ import java.util.Locale
 import kotlin.math.roundToInt
 
 data class DailyWeather(
-    val date: LocalDate,
+    val date: LocalDate? = null,
     val hourly: List<HourlyWeather>,
     val weather: Weather
 )
@@ -40,7 +40,7 @@ fun Int.displayName(temperatureUnit: TemperatureUnit) =
 
 val DailyWeather.dayOfMonth
     get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        "${date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.US)}, ${
+        "${requireNotNull(date).dayOfWeek.getDisplayName(TextStyle.FULL, Locale.US)}, ${
         date.month.getDisplayName(
             TextStyle.SHORT,
             Locale.US
@@ -52,7 +52,7 @@ val DailyWeather.dayOfMonth
 
 val DailyWeather.dayOfWeek
     get() = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-        date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.US)
+        requireNotNull(date).dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.US)
     } else {
         MinSdkWarning
     }

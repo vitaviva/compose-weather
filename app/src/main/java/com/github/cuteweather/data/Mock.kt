@@ -226,8 +226,7 @@ object WeatherDataProvider {
                     }
                 )
             } else {
-                // Min Sdk 26
-                DailyWeather(curDate, hourlyWeather[0], Weather.CloudyRain)
+                DailyWeather(null, hourlyWeather[0], Weather.CloudyRain)
             }
         }.toList()
 }
