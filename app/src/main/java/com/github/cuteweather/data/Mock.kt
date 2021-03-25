@@ -17,8 +17,6 @@ package com.github.cuteweather.data
 
 import android.os.Build
 import java.time.LocalDate
-import java.time.format.TextStyle
-import java.util.Locale
 
 /**
  * note：temperature data use "℃" as default
@@ -32,8 +30,8 @@ private val hourlyWeather = listOf(
         HourlyWeather(9, Weather.Sunny),
         HourlyWeather(10, Weather.MostlyClear),
         HourlyWeather(10, Weather.MostlyClear),
-        HourlyWeather(11, Weather.Cloudy),
-        HourlyWeather(12, Weather.Cloudy),
+        HourlyWeather(11, Weather.Sunny),
+        HourlyWeather(12, Weather.Sunny),
         HourlyWeather(14, Weather.MostlyClear),
         HourlyWeather(15, Weather.MostlyClear),
         HourlyWeather(16, Weather.Sunny),
@@ -210,6 +208,20 @@ private val hourlyWeather = listOf(
 )
 
 object WeatherDataProvider {
+
+    // mock the average weather of day
+    val _weather = { it: Int ->
+        when (it) {
+            0 -> Weather.Sunny
+            1 -> Weather.MostlyClear
+            2 -> Weather.Cloudy
+            3 -> Weather.CloudyRain
+            4 -> Weather.HeavyRain
+            5 -> Weather.Cloudy
+            else -> Weather.Sunny
+        }
+    }
+
     val dailyWeather =
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val curDate: LocalDate = LocalDate.now()
@@ -217,40 +229,16 @@ object WeatherDataProvider {
                 val date = curDate.plusDays(it.toLong())
                 DailyWeather(
                     isToday = it == 0,
-                    dayOfWeek = date.dayOfWeek.getDisplayName(TextStyle.SHORT, Locale.US),
-                    dayOfWeekFull = date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.US),
-                    dayOfMonth = "${date.dayOfWeek.getDisplayName(TextStyle.FULL, Locale.US)}, ${
-                    date.month.getDisplayName(
-                        TextStyle.SHORT,
-                        Locale.US
-                    )
-                    } ${date.dayOfMonth}",
+                    DateToDisplay(date),
                     hourlyWeather[it],
-                    when (it) {
-                        0 -> Weather.Sunny
-                        1 -> Weather.MostlyClear
-                        2 -> Weather.Cloudy
-                        3 -> Weather.CloudyRain
-                        4 -> Weather.HeavyRain
-                        5 -> Weather.Cloudy
-                        else -> Weather.Sunny
-                    }
+                    _weather(it)
                 )
             }.toList()
         } else (0..6).map {
-            (
-                DailyWeather(
-                    hourly = hourlyWeather[it],
-                    weather = when (it) {
-                        0 -> Weather.Sunny
-                        1 -> Weather.MostlyClear
-                        2 -> Weather.Cloudy
-                        3 -> Weather.CloudyRain
-                        4 -> Weather.HeavyRain
-                        5 -> Weather.Cloudy
-                        else -> Weather.Sunny
-                    }
-                )
-                )
+            DailyWeather(
+                date = DateToDisplay(),
+                hourly = hourlyWeather[it],
+                weather = _weather(it)
+            )
         }.toList()
 }

@@ -25,6 +25,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -90,7 +91,7 @@ enum class Weather(
     ),
 
     HeavyRain(
-        "Heavy Rain",
+        "Heavy rain",
         HeavyRainComposed, HeavyRainIcon, HeavyRainAnimatableIcon, RainBg
     )
 }
@@ -138,44 +139,46 @@ object WeatherBackground {
  */
 object WeatherComposedInfo {
 
+    val IconSize = 200.dp // ComposedIcon size
+
     val SunnyComposed = ComposeInfo(
-        sun = IconInfo(200.dp, 0.dp to 0.dp),
-        cloud = IconInfo(200.dp, (-40).dp to 0.dp, 0f),
-        lightCloud = IconInfo(100.dp, (-30).dp to 70.dp, 0f),
-        rains = IconInfo(80.dp, 45.dp to 60.dp, 0f),
-        lightRain = IconInfo(80.dp, 45.dp to 60.dp, 0f),
+        sun = IconInfo(1f),
+        cloud = IconInfo(0.8f, Offset(-0.1f, 0.1f), 0f),
+        lightCloud = IconInfo(0.5f, Offset(-0.15f, 0.35f), 0f),
+        rains = IconInfo(0.4f, Offset(0.225f, 0.3f), 0f),
+        lightRain = IconInfo(0.4f, Offset(0.225f, 0.3f), 0f),
     )
 
     val MostlyClearComposed = ComposeInfo(
-        sun = IconInfo(170.dp, 20.dp to 0.dp),
-        cloud = IconInfo(200.dp, (-40).dp to 0.dp, 0f),
-        lightCloud = IconInfo(80.dp, 35.dp to 75.dp, 1f),
-        rains = IconInfo(80.dp, 45.dp to 60.dp, 0f),
-        lightRain = IconInfo(80.dp, 45.dp to 60.dp, 0f),
+        sun = IconInfo(0.85f, Offset(0.1f, 0f)),
+        cloud = IconInfo(0.5f, Offset(-0.1f, 0.1f), 0f),
+        lightCloud = IconInfo(0.4f, Offset(0.175f, 0.375f), 1f),
+        rains = IconInfo(0.4f, Offset(0.225f, 0.3f), 0f),
+        lightRain = IconInfo(0.4f, Offset(0.225f, 0.3f), 0f),
     )
 
     val CloudyComposed = ComposeInfo(
-        sun = IconInfo(20.dp, 150.dp to 40.dp, alpha = 0f),
-        cloud = IconInfo(200.dp, 0.dp to 0.dp),
-        lightCloud = IconInfo(100.dp, 10.dp to 25.dp),
-        rains = IconInfo(80.dp, 45.dp to 60.dp, alpha = 0f),
-        lightRain = IconInfo(80.dp, 45.dp to 60.dp, alpha = 0f),
+        sun = IconInfo(0.1f, Offset(0.75f, 0.2f), alpha = 0f),
+        cloud = IconInfo(0.8f, Offset(0.1f, 0.1f)),
+        lightCloud = IconInfo(0.5f, Offset(0.05f, 0.125f)),
+        rains = IconInfo(0.4f, Offset(0.225f, 0.3f), alpha = 0f),
+        lightRain = IconInfo(0.4f, Offset(0.225f, 0.3f), alpha = 0f),
     )
 
     val CloudyRainComposed = ComposeInfo(
-        sun = IconInfo(120.dp, 80.dp to 0.dp),
-        cloud = IconInfo(200.dp, 0.dp to 0.dp),
-        lightCloud = IconInfo(100.dp, -(30).dp to 25.dp, 0f),
-        rains = IconInfo(80.dp, 45.dp to 60.dp, 0f),
-        lightRain = IconInfo(80.dp, 45.dp to 60.dp, 1f),
+        sun = IconInfo(0.6f, Offset(0.4f, 0f)),
+        cloud = IconInfo(0.8f, Offset(0.1f, 0.1f)),
+        lightCloud = IconInfo(0.5f, Offset(-0.15f, 0.125f), 0f),
+        rains = IconInfo(0.4f, Offset(0.225f, 0.3f), 0f),
+        lightRain = IconInfo(0.4f, Offset(0.225f, 0.3f), 1f),
     )
 
     val HeavyRainComposed = ComposeInfo(
-        sun = IconInfo(20.dp, 150.dp to 40.dp, alpha = 0f),
-        cloud = IconInfo(200.dp, 0.dp to 0.dp),
-        lightCloud = IconInfo(100.dp, 10.dp to 25.dp),
-        rains = IconInfo(80.dp, 45.dp to 60.dp, alpha = 1f),
-        lightRain = IconInfo(80.dp, 45.dp to 60.dp, 0f),
+        sun = IconInfo(0.1f, Offset(0.75f, 0.2f), alpha = 0f),
+        cloud = IconInfo(0.8f, Offset(0.1f, 0.1f)),
+        lightCloud = IconInfo(0.5f, Offset(0.05f, 0.125f)),
+        rains = IconInfo(0.4f, Offset(0.225f, 0.3f), alpha = 1f),
+        lightRain = IconInfo(0.4f, Offset(0.225f, 0.3f), 0f),
     )
 }
 
@@ -349,43 +352,28 @@ fun PreviewComposedIcon() {
             .padding(10.dp)
     ) {
 
+        val modifier = Modifier
+            .padding(2.5.dp)
+            .background(teal700)
+            .padding(5.dp)
+
         Row(Modifier.align(Alignment.CenterHorizontally)) {
             ComposedIcon(
-                Modifier
-                    .padding(5.dp)
-                    .background(teal700)
-                    .padding(10.dp),
-                composeInfo = SunnyComposed
+                modifier, SunnyComposed
             )
             ComposedIcon(
-                Modifier
-                    .padding(5.dp)
-                    .background(teal700)
-                    .padding(10.dp),
-                composeInfo = CloudyComposed
+                modifier, CloudyComposed
             )
             ComposedIcon(
-                Modifier
-                    .padding(5.dp)
-                    .background(teal700)
-                    .padding(10.dp),
-                composeInfo = CloudyRainComposed
+                modifier, CloudyRainComposed
             )
         }
         Row(Modifier.align(Alignment.CenterHorizontally)) {
             ComposedIcon(
-                Modifier
-                    .padding(5.dp)
-                    .background(teal700)
-                    .padding(10.dp),
-                composeInfo = HeavyRainComposed
+                modifier, HeavyRainComposed
             )
             ComposedIcon(
-                Modifier
-                    .padding(5.dp)
-                    .background(teal700)
-                    .padding(10.dp),
-                composeInfo = MostlyClearComposed
+                modifier, MostlyClearComposed
             )
         }
     }

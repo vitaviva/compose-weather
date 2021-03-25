@@ -10,6 +10,8 @@
       the License.
       -->
     <string name="app_name">CuteWeather</string>
-    <string name="current_weather">The current weather is %s and temperature is %s</string>
-    <string name="average_weather">%s\'s weather is %s with an average temperature of %s</string>
+    <string name="today">Today</string>
+    <string name="tomorrow">Tomorrow</string>
+    <string name="talkback_current_weather">The current weather is %s and temperature is %s</string>
+    <string name="talkback_average_weather">%s\'s weather is %s with an average temperature of %s</string>
 </resources>

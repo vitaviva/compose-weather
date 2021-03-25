@@ -15,8 +15,9 @@
  */
 package com.github.cuteweather.ui
 
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+import com.github.cuteweather.data.WeatherComposedInfo.IconSize
 
 /**
  * [ComposedIcon] use this info to compose icons
@@ -58,30 +59,43 @@ data class ComposeInfo(
 
 /**
  * properties info of each icon
+ * @param sizeRatio: ratio of [WeatherComposedInfo.IconSize]
+ * @param offset: Offset from the top-left
  */
 data class IconInfo(
-    val size: Dp,
-    val offset: Pair<Dp, Dp> = 0.dp to 0.dp,
+    val sizeRatio: Float = 1f,
+    val offset: Offset = Offset(0f, 0f),
     val alpha: Float = 1f,
 ) {
+    val size: Dp = IconSize // max size
+
     operator fun times(float: Float): IconInfo =
         copy(
-            size = size * float,
-            offset = offset.first * float to offset.second * float,
+            sizeRatio = sizeRatio * float,
+            offset = Offset(
+                offset.x * float,
+                offset.y * float
+            ),
             alpha = alpha * float,
         )
 
     operator fun minus(iconInfo: IconInfo): IconInfo =
         copy(
-            size = size - iconInfo.size,
-            offset = offset.first - iconInfo.offset.first to offset.second - iconInfo.offset.second,
+            sizeRatio = sizeRatio - iconInfo.sizeRatio,
+            offset = Offset(
+                offset.x - iconInfo.offset.x,
+                offset.y - iconInfo.offset.y
+            ),
             alpha = alpha - iconInfo.alpha,
         )
 
     operator fun plus(iconInfo: IconInfo): IconInfo =
         copy(
-            size = size + iconInfo.size,
-            offset = offset.first + iconInfo.offset.first to offset.second + iconInfo.offset.second,
+            sizeRatio = sizeRatio + iconInfo.sizeRatio,
+            offset = Offset(
+                offset.x + iconInfo.offset.x,
+                offset.y + iconInfo.offset.y
+            ),
             alpha = alpha + iconInfo.alpha,
         )
 }

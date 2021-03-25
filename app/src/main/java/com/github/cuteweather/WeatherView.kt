@@ -159,7 +159,7 @@ fun WeatherView() {
 
                 // for Accessibility
                 val accessibilityContent = stringResource(
-                    id = R.string.current_weather,
+                    id = R.string.talkback_current_weather,
                     WeatherDataProvider.dailyWeather[0].weather().text,
                     WeatherDataProvider.dailyWeather[0].temperature()
                         .displayName(LocalTemUnit.current)
@@ -216,7 +216,7 @@ fun WeatherInfoPager(
         Column(modifier = Modifier.fillMaxSize()) {
 
             Text(
-                day.dayOfMonth,
+                day.date.dayOfMonth,
                 style = TextStyle(
                     fontSize = 18.sp,
                     fontFamily = FontType.fontFamily,
@@ -387,8 +387,8 @@ fun DailyWeatherChart(
 
                 // for Accessibility
                 val accessibilityContent = stringResource(
-                    id = R.string.average_weather,
-                    dailyWeathers[it].dayOfWeekFull,
+                    id = R.string.talkback_average_weather,
+                    dailyWeathers[it].date.dayOfWeekFull,
                     dailyWeathers[it].weather(),
                     dailyWeathers[it].temperature().displayName(LocalTemUnit.current)
                 )
@@ -410,9 +410,9 @@ fun DailyWeatherChart(
 
                         Text(
                             text = when (it) {
-                                0 -> "Today"
-                                1 -> "Tomorrow"
-                                else -> dailyWeathers[it].dayOfWeek
+                                0 -> stringResource(id = R.string.today)
+                                1 -> stringResource(id = R.string.tomorrow)
+                                else -> dailyWeathers[it].date.dayOfWeek
                             },
                             style = TextStyle(fontSize = 10.sp),
                             textAlign = TextAlign.Center,
@@ -423,10 +423,11 @@ fun DailyWeatherChart(
                             modifier = Modifier
                                 .padding(5.dp)
                         ) {
+                            val weather = dailyWeathers[it].weather()
                             if (it == selectedIndex) {
-                                dailyWeathers[it].weather().animatableIcon()
+                                weather.animatableIcon()
                             } else {
-                                dailyWeathers[it].weather().icon()
+                                weather.icon()
                             }
                         }
                     }
