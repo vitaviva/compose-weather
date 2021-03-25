@@ -6,10 +6,11 @@
 ![](https://img.shields.io/badge/jetpack_compose-1.0.0_beta02-green.svg)
 ![](https://img.shields.io/badge/min_sdk_versioin-26-orange.svg)
 
-CuteWeather is a beautiful weather app build in Jetpack Compose
 
 ## :scroll: Description
 <!--- Describe your app in one or two sentences -->
+CuteWeather is a beautiful weather app build in Jetpack Compose
+
 
 <img src="app/src/main/res/drawable/ic_launcher.png" width=120 align=left hspace="10" vspace="10"  >
 
@@ -17,8 +18,6 @@ CuteWeather is a beautiful weather app build in Jetpack Compose
 - Daily and hourly temperature trends
 - Switch between Fahrenheit and centigrade
 - Support Talkback of Android Accessibility
-
-<img src="/results/icons.gif" width="400">
 
 see more:  [Android Dev Challenge: Week #4: Weather app](https://android-developers.googleblog.com/2021/03/android-dev-challenge-4.html)
 
@@ -28,16 +27,15 @@ see more:  [Android Dev Challenge: Week #4: Weather app](https://android-develop
 <!--- What are you especially proud of? -->
 
 **Without GIF, Lottie or other static resources**, <br/>
-all the UI elements are created by code with Jetpack Compose graphics, animations and so on.
-
+all the UI elements are created by code with Jetpack Compose graphics, animations and custom layout.
+<img src="/results/icons.gif" width="450">
 
 <img src="/results/video.gif" width="260">&emsp;<img src="/results/video_2.gif" width="260">
 
-
 ## :camera_flash: Screenshots
 <!-- You can add more screenshots here if you like -->
-<img src="/results/screenshot_1.png" width="200">&emsp;<img src="/results/screenshot_2.png" width="200"> <br/>
-<img src="/results/screenshot_3.png" width="200">&emsp;<img src="/results/screenshot_4.png" width="200">
+<img src="/results/screenshot_1.png" width="200">&emsp;<img src="/results/screenshot_2.png" width="200"> &emsp; <img src="/results/screenshot_3.png" width="200"> <br/>
+<img src="/results/screenshot_5.png" width="200">&emsp;<img src="/results/screenshot_6.png" width="200"> &emsp; <img src="/results/screenshot_7.png" width="200">
 
 ## License
 ```

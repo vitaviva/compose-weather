@@ -25,8 +25,7 @@ import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -135,41 +134,25 @@ fun Rains(
             if (animate) {
                 AnimatableRaindrop(
                     modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(),
+                        .fillMaxSize(),
                     500
                 )
                 AnimatableRaindrop(
                     modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(),
+                        .fillMaxSize(),
                     600
                 )
                 if (!lightRain) {
                     AnimatableRaindrop(
-                        modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight(),
+                        modifier.fillMaxSize(),
                         600
                     )
                 }
             } else {
-                Raindrop(
-                    modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight()
-                )
-                Raindrop(
-                    modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight(),
-                )
+                Raindrop(modifier.fillMaxSize())
+                Raindrop(modifier.fillMaxSize())
                 if (!lightRain) {
-                    Raindrop(
-                        modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight(),
-                    )
+                    Raindrop(modifier.fillMaxSize())
                 }
             }
         }

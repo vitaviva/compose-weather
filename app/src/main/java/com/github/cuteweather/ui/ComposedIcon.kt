@@ -25,7 +25,9 @@ import androidx.compose.ui.draw.alpha
 import com.github.cuteweather.data.WeatherComposedInfo.IconSize
 import com.github.cuteweather.ui.weathericon.AnimatableCloud
 import com.github.cuteweather.ui.weathericon.AnimatableRains
+import com.github.cuteweather.ui.weathericon.AnimatableSnow
 import com.github.cuteweather.ui.weathericon.AnimatableSun
+import com.github.cuteweather.ui.weathericon.AnimatableThunder
 
 /**
  * show current weather's animation on top of [WeatherView]
@@ -33,7 +35,7 @@ import com.github.cuteweather.ui.weathericon.AnimatableSun
 @Composable
 fun ComposedIcon(modifier: Modifier = Modifier, composeInfo: ComposeInfo) {
 
-    val (sun, cloud, lightCloud, rains, lightRain) = composeInfo
+    val (sun, cloud, lightCloud, rains, lightRain, snow, thunder) = composeInfo
     Box(modifier = modifier.size(IconSize)) {
 
         val _modifier = remember(Unit) {
@@ -54,8 +56,12 @@ fun ComposedIcon(modifier: Modifier = Modifier, composeInfo: ComposeInfo) {
 
         AnimatableRains(_modifier(lightRain), true) // light rain
 
+        AnimatableSnow(_modifier(snow))
+
         AnimatableCloud(_modifier(cloud))
 
         AnimatableCloud(_modifier(lightCloud), 1000) // light cloud
+
+        AnimatableThunder(_modifier(thunder))
     }
 }

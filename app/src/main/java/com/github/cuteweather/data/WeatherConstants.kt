@@ -33,22 +33,30 @@ import com.github.cuteweather.data.WeatherAnimatableIcon.CloudyAnimatableIcon
 import com.github.cuteweather.data.WeatherAnimatableIcon.HeavyRainAnimatableIcon
 import com.github.cuteweather.data.WeatherAnimatableIcon.MostlyClearAnimatableIcon
 import com.github.cuteweather.data.WeatherAnimatableIcon.RainAnimatableIcon
+import com.github.cuteweather.data.WeatherAnimatableIcon.SnowAnimatableIcon
 import com.github.cuteweather.data.WeatherAnimatableIcon.SunnyAnimatableIcon
+import com.github.cuteweather.data.WeatherAnimatableIcon.ThunderStormAnimatableIcon
 import com.github.cuteweather.data.WeatherBackground.ClearBg
 import com.github.cuteweather.data.WeatherBackground.CloudyBg
 import com.github.cuteweather.data.WeatherBackground.RainBg
 import com.github.cuteweather.data.WeatherBackground.ShowersBg
+import com.github.cuteweather.data.WeatherBackground.SnowBg
+import com.github.cuteweather.data.WeatherBackground.StormBg
 import com.github.cuteweather.data.WeatherBackground.SunnyBg
 import com.github.cuteweather.data.WeatherComposedInfo.CloudyComposed
 import com.github.cuteweather.data.WeatherComposedInfo.CloudyRainComposed
 import com.github.cuteweather.data.WeatherComposedInfo.HeavyRainComposed
 import com.github.cuteweather.data.WeatherComposedInfo.MostlyClearComposed
+import com.github.cuteweather.data.WeatherComposedInfo.SnowyComposed
 import com.github.cuteweather.data.WeatherComposedInfo.SunnyComposed
+import com.github.cuteweather.data.WeatherComposedInfo.ThunderStormComposed
 import com.github.cuteweather.data.WeatherIcon.CloudyIcon
 import com.github.cuteweather.data.WeatherIcon.HeavyRainIcon
 import com.github.cuteweather.data.WeatherIcon.MostlyClearIcon
 import com.github.cuteweather.data.WeatherIcon.RainIcon
+import com.github.cuteweather.data.WeatherIcon.SnowyIcon
 import com.github.cuteweather.data.WeatherIcon.SunnyIcon
+import com.github.cuteweather.data.WeatherIcon.ThunderStormIcon
 import com.github.cuteweather.ui.ComposeInfo
 import com.github.cuteweather.ui.ComposedIcon
 import com.github.cuteweather.ui.IconInfo
@@ -59,10 +67,14 @@ import com.github.cuteweather.ui.theme.yellow200
 import com.github.cuteweather.ui.theme.yellow500
 import com.github.cuteweather.ui.weathericon.AnimatableCloud
 import com.github.cuteweather.ui.weathericon.AnimatableRains
+import com.github.cuteweather.ui.weathericon.AnimatableSnow
 import com.github.cuteweather.ui.weathericon.AnimatableSun
+import com.github.cuteweather.ui.weathericon.AnimatableThunder
 import com.github.cuteweather.ui.weathericon.Cloud
 import com.github.cuteweather.ui.weathericon.Rains
+import com.github.cuteweather.ui.weathericon.Snow
 import com.github.cuteweather.ui.weathericon.Sun
+import com.github.cuteweather.ui.weathericon.Thunder
 
 enum class Weather(
     val text: String = "",
@@ -93,6 +105,16 @@ enum class Weather(
     HeavyRain(
         "Heavy rain",
         HeavyRainComposed, HeavyRainIcon, HeavyRainAnimatableIcon, RainBg
+    ),
+
+    Snowy(
+        "Snowy",
+        SnowyComposed, SnowyIcon, SnowAnimatableIcon, SnowBg
+    ),
+
+    Storm(
+        "Thundery storm",
+        ThunderStormComposed, ThunderStormIcon, ThunderStormAnimatableIcon, StormBg
     )
 }
 
@@ -132,6 +154,18 @@ object WeatherBackground {
         teal900,
         teal500
     )
+
+    val SnowBg = BgColors(
+        Color.LightGray,
+        Color.White,
+        teal700
+    )
+
+    val StormBg = BgColors(
+        Color.Black,
+        Color.White,
+        Color.DarkGray
+    )
 }
 
 /**
@@ -147,6 +181,9 @@ object WeatherComposedInfo {
         lightCloud = IconInfo(0.5f, Offset(-0.15f, 0.35f), 0f),
         rains = IconInfo(0.4f, Offset(0.225f, 0.3f), 0f),
         lightRain = IconInfo(0.4f, Offset(0.225f, 0.3f), 0f),
+        snow = IconInfo(0.5f, Offset(0.1f, 0.3f), alpha = 0f),
+        thunder = IconInfo(0.45f, Offset(0.29f, 0.6f), alpha = 0f)
+
     )
 
     val MostlyClearComposed = ComposeInfo(
@@ -155,6 +192,9 @@ object WeatherComposedInfo {
         lightCloud = IconInfo(0.4f, Offset(0.175f, 0.375f), 1f),
         rains = IconInfo(0.4f, Offset(0.225f, 0.3f), 0f),
         lightRain = IconInfo(0.4f, Offset(0.225f, 0.3f), 0f),
+        snow = IconInfo(0.5f, Offset(0.1f, 0.3f), alpha = 0f),
+        thunder = IconInfo(0.45f, Offset(0.29f, 0.6f), alpha = 0f)
+
     )
 
     val CloudyComposed = ComposeInfo(
@@ -163,6 +203,9 @@ object WeatherComposedInfo {
         lightCloud = IconInfo(0.5f, Offset(0.05f, 0.125f)),
         rains = IconInfo(0.4f, Offset(0.225f, 0.3f), alpha = 0f),
         lightRain = IconInfo(0.4f, Offset(0.225f, 0.3f), alpha = 0f),
+        snow = IconInfo(0.5f, Offset(0.1f, 0.3f), alpha = 0f),
+        thunder = IconInfo(0.45f, Offset(0.29f, 0.6f), alpha = 0f)
+
     )
 
     val CloudyRainComposed = ComposeInfo(
@@ -171,6 +214,9 @@ object WeatherComposedInfo {
         lightCloud = IconInfo(0.5f, Offset(-0.15f, 0.125f), 0f),
         rains = IconInfo(0.4f, Offset(0.225f, 0.3f), 0f),
         lightRain = IconInfo(0.4f, Offset(0.225f, 0.3f), 1f),
+        snow = IconInfo(0.5f, Offset(0.1f, 0.3f), alpha = 0f),
+        thunder = IconInfo(0.45f, Offset(0.29f, 0.6f), alpha = 0f)
+
     )
 
     val HeavyRainComposed = ComposeInfo(
@@ -179,6 +225,31 @@ object WeatherComposedInfo {
         lightCloud = IconInfo(0.5f, Offset(0.05f, 0.125f)),
         rains = IconInfo(0.4f, Offset(0.225f, 0.3f), alpha = 1f),
         lightRain = IconInfo(0.4f, Offset(0.225f, 0.3f), 0f),
+        snow = IconInfo(0.5f, Offset(0.1f, 0.3f), alpha = 0f),
+        thunder = IconInfo(0.45f, Offset(0.29f, 0.6f), alpha = 0f)
+
+    )
+
+    val SnowyComposed = ComposeInfo(
+        sun = IconInfo(0.1f, Offset(0.75f, 0.2f), alpha = 0f),
+        cloud = IconInfo(0.8f, Offset(0.1f, 0.1f)),
+        lightCloud = IconInfo(0.5f, Offset(-0.15f, 0.35f), 0f),
+        rains = IconInfo(0.4f, Offset(0.225f, 0.3f), alpha = 0f),
+        lightRain = IconInfo(0.4f, Offset(0.225f, 0.3f), 0f),
+        snow = IconInfo(0.5f, Offset(0.1f, 0.3f), alpha = 1f),
+        thunder = IconInfo(0.45f, Offset(0.29f, 0.6f), alpha = 0f)
+
+    )
+
+    val ThunderStormComposed = ComposeInfo(
+        sun = IconInfo(0.1f, Offset(0.75f, 0.2f), alpha = 0f),
+        cloud = IconInfo(0.9f, Offset(0.06f, 0.05f)),
+        lightCloud = IconInfo(0.5f, Offset(-0.05f, 0.125f), 0f),
+        rains = IconInfo(0.45f, Offset(0.2f, 0.3f), alpha = 0f),
+        lightRain = IconInfo(0.4f, Offset(0.225f, 0.3f), 0f),
+        snow = IconInfo(0.5f, Offset(0.1f, 0.3f), alpha = 0f),
+        thunder = IconInfo(0.5f, Offset(0.27f, 0.6f), alpha = 1f)
+
     )
 }
 
@@ -240,6 +311,37 @@ object WeatherIcon {
                 Modifier
                     .size(30.dp)
                     .align(Alignment.TopCenter)
+            )
+        }
+    }
+
+    val SnowyIcon = @Composable {
+        Box(Modifier.size(40.dp)) {
+            Snow(
+                Modifier
+                    .size(20.dp)
+                    .offset(3.dp, 8.dp),
+            )
+            Cloud(
+                Modifier
+                    .size(30.dp)
+                    .align(Alignment.TopCenter)
+            )
+        }
+    }
+
+    val ThunderStormIcon = @Composable {
+        Box(Modifier.size(40.dp)) {
+
+            Cloud(
+                Modifier
+                    .size(30.dp)
+                    .align(Alignment.TopCenter)
+            )
+            Thunder(
+                Modifier
+                    .size(20.dp)
+                    .offset(10.dp, 18.dp),
             )
         }
     }
@@ -314,9 +416,40 @@ object WeatherAnimatableIcon {
             )
         }
     }
+
+    val SnowAnimatableIcon = @Composable {
+        Box(Modifier.size(40.dp)) {
+            AnimatableSnow(
+                Modifier
+                    .size(20.dp)
+                    .offset(3.dp, 8.dp),
+            )
+            Cloud(
+                Modifier
+                    .size(30.dp)
+                    .align(Alignment.TopCenter)
+            )
+        }
+    }
+
+    val ThunderStormAnimatableIcon = @Composable {
+        Box(Modifier.size(40.dp)) {
+            Cloud(
+                Modifier
+                    .size(30.dp)
+                    .align(Alignment.TopCenter)
+            )
+            AnimatableThunder(
+                Modifier
+                    .size(20.dp)
+                    .offset(10.dp, 18.dp),
+                300
+            )
+        }
+    }
 }
 
-@Preview(heightDp = 200)
+@Preview(heightDp = 300)
 @Composable
 fun PreviewIcon() {
     Column {
@@ -340,16 +473,24 @@ fun PreviewIcon() {
             HeavyRainIcon()
             HeavyRainAnimatableIcon()
         }
+        Row(Modifier.weight(1f)) {
+            SnowyIcon()
+            SnowAnimatableIcon()
+        }
+        Row(Modifier.weight(1f)) {
+            ThunderStormIcon()
+            ThunderStormAnimatableIcon()
+        }
     }
 }
 
-@Preview(widthDp = 740, heightDp = 480)
+@Preview(widthDp = 960, heightDp = 640)
 @Composable
 fun PreviewComposedIcon() {
     Column(
         Modifier
             .background(Color.White)
-            .padding(10.dp)
+            .padding(40.dp)
     ) {
 
         val modifier = Modifier
@@ -367,6 +508,9 @@ fun PreviewComposedIcon() {
             ComposedIcon(
                 modifier, CloudyRainComposed
             )
+            ComposedIcon(
+                modifier, ThunderStormComposed
+            )
         }
         Row(Modifier.align(Alignment.CenterHorizontally)) {
             ComposedIcon(
@@ -374,6 +518,9 @@ fun PreviewComposedIcon() {
             )
             ComposedIcon(
                 modifier, MostlyClearComposed
+            )
+            ComposedIcon(
+                modifier, SnowyComposed
             )
         }
     }
