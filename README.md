@@ -1,4 +1,6 @@
-# CuteWeather
+# CuteWeather 
+🌤可爱天气 | かわいい天気 | 귀여운 날씨
+
 
 <!--- Replace <OWNER> with your Github Username and <REPOSITORY> with the name of your repository. -->
 <!--- You can find both of these in the url bar when you open your repository in github. -->
@@ -14,7 +16,7 @@ CuteWeather is a beautiful weather app build in Jetpack Compose
 
 <img src="app/src/main/res/drawable/ic_launcher.png" width=120 align=left hspace="10" vspace="10"  >
 
-- Display weather info with cute animation
+- Shows various weather effects with a cute animation including sunny, rainy, snowy, thunder, etc
 - Daily and hourly temperature trends
 - Switch between Fahrenheit and centigrade
 - Support Talkback of Android Accessibility
@@ -26,11 +28,18 @@ see more:  [Android Dev Challenge: Week #4: Weather app](https://android-develop
 <!--- Optionally point readers to interesting parts of your submission. -->
 <!--- What are you especially proud of? -->
 
-**Without GIF, Lottie or other static resources**, <br/>
-all the UI elements are created by code with Jetpack Compose graphics, animations and custom layout.
+- **Without GIF, Lottie or other static resources**, <br/>
+all the UI effects are created by code with Jetpack Compose graphics, animations and custom layout.
+
 <img src="/results/icons.gif" width="450">
 
+You can preview the above weather icons in [WeatherConstants.kt](app/src/main/java/com/github/cuteweather/data/WeatherConstants.kt)
+
+
+-  The background will change according to the weather
+
 <img src="/results/video.gif" width="260">&emsp;<img src="/results/video_2.gif" width="260">
+
 
 ## :camera_flash: Screenshots
 <!-- You can add more screenshots here if you like -->
