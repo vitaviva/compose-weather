@@ -16,10 +16,11 @@ CuteWeather is a beautiful weather app build in Jetpack Compose
 
 <img src="app/src/main/res/drawable/ic_launcher.png" width=120 align=left hspace="10" vspace="10"  >
 
-- Shows various weather effects with a cute animation including sunny, rainy, snowy, thunder, etc
-- Daily and hourly temperature trends
+- Easy to use, single screen display all content
+- Various weather effects with cute animation including sunny, rainy, snowy, etc
+- Daily and hourly temperature trends chart
 - Switch between Fahrenheit and centigrade
-- Support Talkback of Android Accessibility
+- Support Talkback of android accessibility
 
 see more:  [Android Dev Challenge: Week #4: Weather app](https://android-developers.googleblog.com/2021/03/android-dev-challenge-4.html)
 
@@ -33,10 +34,10 @@ all the UI effects are created by code with Jetpack Compose graphics, animations
 
 <img src="/results/icons.gif" width="450">
 
-You can preview the above weather icons in [WeatherConstants.kt](app/src/main/java/com/github/cuteweather/data/WeatherConstants.kt)
+You can preview the above weather effects in [WeatherConstants.kt](app/src/main/java/com/github/cuteweather/data/WeatherConstants.kt)
 
 
--  The background will change according to the weather
+-  The background also changes according to the weather
 
 <img src="/results/video.gif" width="260">&emsp;<img src="/results/video_2.gif" width="260">
 
